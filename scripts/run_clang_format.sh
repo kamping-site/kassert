@@ -5,6 +5,6 @@ if [[ "$PWD" == */scripts ]]; then
 	exit 1
 fi
 
-for directory in "include" "tests" "examples"; do 
+for directory in "include" "tests"; do 
 	find $directory -type f \( -name "*.cpp" -o -name "*.hpp" \) -exec clang-format -i {} \;
 done
