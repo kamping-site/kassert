@@ -2,7 +2,7 @@
 
 <!-- ![KAssert logo](./docs/images/logo.svg) -->
 
-KAssert is the assertion library used by KaMPI.ng, the post-modern C++ wrapper for MPI. 
+KAssert is the assertion library used by KaMPI.ng, the Karlsruhe MPI Wrapper.
 However, KAssert does not depend on MPI and can be used in non-MPI code.
 
 ## Features
