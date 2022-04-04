@@ -11,9 +11,7 @@ on:
 jobs:
   formatting-check:
     name: Formatting Check
-    runs-on: self-hosted
-    container:
-      image: "localhost:5000/kamping-ci"
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Check formatting
