@@ -15,7 +15,7 @@ However, KAssert does not depend on MPI and can be used in non-MPI code.
 
 The `KASSERT` macros accepts 1, 2 or 3 arguments. 
 
-```
+```c++
 KASSERT(1 + 1 == 3, "The world is a lie!", kassert::normal);
 KASSERT(1 + 1 == 3, "The world is a lie!"); // use default assertion level (kassert::normal)
 KASSERT(1 + 1 == 3); // omit custom error message
