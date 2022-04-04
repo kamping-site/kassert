@@ -32,7 +32,7 @@ using namespace ::testing;
 // Dummy assertion levels for tests
 namespace assert {
 constexpr int light = kassert::assert::normal - 1;
-constexpr int heavy  = kassert::assert::normal + 1;
+constexpr int heavy = kassert::assert::normal + 1;
 } // namespace assert
 
 // General comment: all KASSERT() and THROWING_KASSERT() calls with a relation in their expression are placed inside

@@ -11,17 +11,14 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
-    container:
-      image: "localhost:5000/kamping-ci"
+    runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
       matrix:
         compiler:
-          - { name: Clang, cc: clang, cxx: clang++}
-          - { name: GNU, cc: gcc, cxx: g++}
+          - { name: Clang, cc: clang, cxx: clang++ }
+          - { name: GNU, cc: gcc, cxx: g++ }
         build-mode: [Debug, Release]
-
     timeout-minutes: 60
     steps:
     - uses: actions/checkout@v2
@@ -31,8 +28,6 @@ jobs:
       run: |
         echo CXX=${{ matrix.compiler.cxx }} >> $GITHUB_ENV
         echo CC=${{ matrix.compiler.cc }} >> $GITHUB_ENV
-        echo OMPI_CXX=${{ matrix.compiler.cxx }} >> $GITHUB_ENV
-        echo OMPI_CC=${{ matrix.compiler.cc }} >> $GITHUB_ENV
     - name: cpu-cores
       uses: SimenB/github-actions-cpu-cores@v1
       id: cpu-cores
