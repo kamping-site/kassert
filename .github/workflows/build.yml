@@ -34,7 +34,7 @@ jobs:
     - name: print-cpu-cores
       run: echo ${{ steps.cpu-cores.outputs.count }}
     - name: cmake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build-mode }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }} -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }}
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build-mode }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }} -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }} -DKASSERT_WARNINGS_ARE_ERRORS=On -DKASSERT_BUILD_TESTS=On
     - name: build
       run: cmake --build build/ --parallel ${{ steps.cpu-cores.outputs.count }}
     - name: run tests
