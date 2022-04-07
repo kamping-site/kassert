@@ -24,7 +24,7 @@
 
 #include "kassert/internal/expression_decomposition.hpp"
 #include "kassert/internal/logger.hpp"
-#include "kassert/internal/macros.hpp"
+#include "kassert/internal/assertion_macros.hpp"
 
 #ifndef KASSERT_ASSERTION_LEVEL
     #warning "Assertion level was not set explicitly; using default assertion level."
