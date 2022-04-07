@@ -17,7 +17,7 @@ jobs:
       matrix:
         compiler:
           - { name: Clang, cc: clang, cxx: clang++ }
-          - { name: GNU, cc: gcc, cxx: g++ }
+          - { name: GNU, cc: gcc-10, cxx: g++-10 }
         build-mode: [Debug, Release]
     timeout-minutes: 60
     steps:
