@@ -12,7 +12,7 @@
 // <https://www.gnu.org/licenses/>.
 
 #undef KASSERT_ASSERTION_LEVEL
-#define KASSERT_ASSERTION_LEVEL 3
+#define KASSERT_ASSERTION_LEVEL kassert::assert::normal
 
 #include "kassert/kassert.hpp"
 
