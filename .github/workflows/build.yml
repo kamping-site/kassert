@@ -28,6 +28,10 @@ jobs:
       run: |
         echo CXX=${{ matrix.compiler.cxx }} >> $GITHUB_ENV
         echo CC=${{ matrix.compiler.cc }} >> $GITHUB_ENV
+    - name: print-compiler-version
+      run: |
+        $CC --version 
+        $CXX --version
     - name: cpu-cores
       uses: SimenB/github-actions-cpu-cores@v1
       id: cpu-cores
