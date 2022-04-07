@@ -18,6 +18,7 @@ jobs:
         compiler:
           - { name: Clang, cc: clang, cxx: clang++ }
           - { name: GNU, cc: gcc-10, cxx: g++-10 }
+          - { name: Intel, cc: icx, cxx: icpx }
         build-mode: [Debug, Release]
     timeout-minutes: 60
     steps:
@@ -32,6 +33,24 @@ jobs:
       run: |
         echo CXX=${{ matrix.compiler.cxx }} >> $GITHUB_ENV
         echo CC=${{ matrix.compiler.cc }} >> $GITHUB_ENV
+    - name: setup-intel-oneapi
+      if: matrix.compiler.name == 'Intel'
+      run: |
+        wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+        sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+        rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+        sudo echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+        sudo apt-get update
+        sudo apt-get install -y intel-oneapi-common-vars
+    - name: install-icc
+      if: matrix.compiler.name == 'Intel'
+      run: |
+        sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+    - name: source-intel-vars
+      if: matrix.compiler.name == 'Intel'
+      run: |
+        source /opt/intel/oneapi/setvars.sh
+        printenv >> $GITHUB_ENV
     - name: print-compiler-version
       run: |
         $CC --version 
