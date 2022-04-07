@@ -34,6 +34,7 @@ if(EXISTS "${LOC_PATH}")
   message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles.")
 endif()
 
+option(KASSERT_WARNINGS_ARE_ERRORS OFF)
 option(KASSERT_BUILD_TESTS OFF)
 
 add_subdirectory(extern)
@@ -44,6 +45,52 @@ target_include_directories(kassert_base INTERFACE include)
 
 # set C++ standard to C++17
 target_compile_features(kassert_base INTERFACE cxx_std_17)
+
+list(
+  APPEND KASSERT_WARNING_FLAGS
+  "-Wall"
+  "-Wextra"
+  "-Wconversion"
+  "-Wnon-virtual-dtor"
+  "-Woverloaded-virtual"
+  "-Wshadow"
+  "-Wsign-conversion"
+  "-Wundef"
+  "-Wunreachable-code"
+  "-Wunused"
+)
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  list(
+    APPEND KASSERT_WARNING_FLAGS
+    "-Wcast-align"
+    "-Wnull-dereference"
+    "-Wpedantic"
+    "-Wextra-semi"
+    "-Wno-gnu-zero-variadic-macro-arguments"
+  )
+endif()
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  list(
+    APPEND KASSERT_WARNING_FLAGS
+    "-Wcast-align"
+    "-Wnull-dereference"
+    "-Wpedantic"
+    "-Wnoexcept"
+    "-Wsuggest-attribute=const"
+    "-Wsuggest-attribute=noreturn"
+    "-Wsuggest-override"
+  )
+endif()
+
+# OFF by default.
+if(KASSERT_WARNINGS_ARE_ERRORS)
+  list(
+    APPEND KASSERT_WARNING_FLAGS
+    "-Werror"
+  )
+endif()
 
 # Actual library target with compile definitions
 add_library(kassert INTERFACE)
