@@ -18,7 +18,7 @@ jobs:
         compiler:
           - { name: Clang, cc: clang, cxx: clang++ }
           - { name: GNU, cc: gcc, cxx: g++ }
-          - { name: Intenl, cc: icx, cxx: icpx }
+          - { name: Intel, cc: icx, cxx: icpx }
         build-mode: [Debug, Release]
     timeout-minutes: 60
     steps:
