@@ -26,10 +26,32 @@
 #include "kassert/internal/expression_decomposition.hpp"
 #include "kassert/internal/logger.hpp"
 
+/// @brief Assertion levels
+namespace kassert::assert {
+/// @defgroup assertion-levels Assertion levels
+/// Predefined assertion levels.
+///
+/// @{
+
+/// @brief Assertion level for exceptions if exception mode is disabled.
+#define KASSERT_ASSERTION_LEVEL_KTHROW 10
+
+/// @brief Assertion level for exceptions if exception mode is disabled.
+constexpr int kthrow = KASSERT_ASSERTION_LEVEL_KTHROW;
+
+/// @brief Default assertion level. This level is used if no assertion level is specified.
+#define KASSERT_ASSERTION_LEVEL_NORMAL 30
+
+/// @brief Default assertion level. This level is used if no assertion level is specified.
+constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
+
+/// @}
+} // namespace kassert::assert
+
 #ifndef KASSERT_ASSERTION_LEVEL
     #warning "Assertion level was not set explicitly; using default assertion level."
-    /// @brief Default assertion level to `kassert::assert::normal` if not set explicitly.
-    #define KASSERT_ASSERTION_LEVEL 30
+  /// @brief Default assertion level to `kassert::assert::normal` if not set explicitly.
+    #define KASSERT_ASSERTION_LEVEL KASSERT_ASSERTION_LEVEL_NORMAL
 #endif
 
 /// @brief Assertion macro for the KaMPI.ng library. Accepts between one and three parameters.
@@ -123,28 +145,6 @@ private:
     std::string _what;
 };
 } // namespace kassert
-
-/// @brief Assertion levels
-namespace kassert::assert {
-/// @defgroup assertion-levels Assertion levels
-/// Predefined assertion levels.
-///
-/// @{
-
-/// @brief Assertion level for exceptions if exception mode is disabled.
-#define KASSERT_ASSERTION_LEVEL_KTHROW 10
-
-/// @brief Assertion level for exceptions if exception mode is disabled.
-constexpr int kthrow = KASSERT_ASSERTION_LEVEL_KTHROW;
-
-/// @brief Default assertion level. This level is used if no assertion level is specified.
-#define KASSERT_ASSERTION_LEVEL_NORMAL 30
-
-/// @brief Default assertion level. This level is used if no assertion level is specified.
-constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
-
-/// @}
-} // namespace kassert::assert
 
 namespace kassert::internal {
 /// @brief Checks if a assertion of the given level is enabled. This is controlled by the CMake option
