@@ -1,0 +1,20 @@
+namespace kamping {
+
+  /** @mainpage KASSERT Documentation Overview
+
+  <img width="920" height="200" src="logo.svg">
+
+  ## Functionallity
+
+  ## Dependencies
+  - Building this documentation requires `Doxygen 1.9.2` or newer.
+
+  ## Guidelines
+
+  */
+
+/**
+
+*/
+
+} // namespace kamping
