@@ -378,39 +378,39 @@ TEST(KassertTest, unsupported_type_expansion) {
 
 TEST(KassertTest, short_circuit_evaluation_works) {
     bool flag        = false;
-    auto side_effect = [&] (bool const ans) {
+    auto side_effect = [&](bool const ans) {
         flag = true;
         return ans;
     };
 
-    // short-circuit or 
+    // short-circuit or
     KASSERT(true || side_effect(false));
     EXPECT_FALSE(flag);
     flag = false;
 
-    // do not short-circuit in negative case 
+    // do not short-circuit in negative case
     KASSERT(false || side_effect(true));
     EXPECT_TRUE(flag);
     flag = false;
 
-    // short-circuit and 
+    // short-circuit and
     auto and_sc = [&] {
         KASSERT(false && side_effect(false), "flag=" << flag);
     };
     EXPECT_EXIT({ and_sc(); }, KilledBySignal(SIGABRT), "flag=0");
     flag = false;
-    
-    // do not short-circuit in positive case 
+
+    // do not short-circuit in positive case
     KASSERT(true && side_effect(true));
     EXPECT_TRUE(flag);
     flag = false;
 
-    // multiple ors 
+    // multiple ors
     KASSERT(false || true || side_effect(false));
     EXPECT_FALSE(flag);
     flag = false;
 
-    // multiple ands 
+    // multiple ands
     auto and_and_sc = [&] {
         KASSERT(true && false && side_effect(false), "flag=" << flag);
     };
