@@ -117,23 +117,6 @@ public:
 
     /// @cond IMPLEMENTATION
 
-    // Since we cannot implement && and || while preserving short-circuit evaluation, we forbid it
-#define KASSERT_ASSERT_OP_FORBIDDEN(op)                                                                  \
-    template <typename RhsPrimeT>                                                                        \
-    friend BinaryExpression<BinaryExpression<LhsT, RhsT>, RhsPrimeT> operator op(                        \
-        BinaryExpression<LhsT, RhsT>&&, RhsPrimeT const&) {                                              \
-        static_assert(                                                                                   \
-            AlwaysFalse<RhsPrimeT>::value,                                                               \
-            "Operator " #op " is not allowed inside a KASSERT expression."                               \
-            " Instead, you have to add a second pair of parentheses around your expression, i.e., write" \
-            " KASSERT((lhs " #op " rhs))");                                                              \
-    }
-
-    // KASSERT_ASSERT_OP_FORBIDDEN(&&)
-    // KASSERT_ASSERT_OP_FORBIDDEN(||)
-
-#undef KASSERT_ASSERT_OP_FORBIDDEN
-
     // Overload operators to return a proxy object that decomposes the rhs of the logical operator
 #define KASSERT_ASSERT_OP(op)                                                     \
     template <typename RhsPrimeT>                                                 \
@@ -214,22 +197,6 @@ public:
     }
 
     /// @cond IMPLEMENTATION
-
-    // Since we cannot implement && and || while preserving short-circuit evaluation, we forbid it
-#define KASSERT_ASSERT_OP_FORBIDDEN(op)                                                                  \
-    template <typename RhsT>                                                                             \
-    friend BinaryExpression<LhsT, RhsT> operator op(LhsExpression&&, RhsT const&) {                      \
-        static_assert(                                                                                   \
-            AlwaysFalse<RhsT>::value,                                                                    \
-            "Operator " #op " is not allowed inside a KASSERT expression."                               \
-            " Instead, you have to add a second pair of parentheses around your expression, i.e., write" \
-            " KASSERT((lhs " #op " rhs))");                                                              \
-    }
-
-    // KASSERT_ASSERT_OP_FORBIDDEN(&&)
-    // KASSERT_ASSERT_OP_FORBIDDEN(||)
-
-#undef KASSERT_ASSERT_OP_FORBIDDEN
 
     // Overload binary operators to return a proxy object that decomposes the rhs of the operator.
 #define KASSERT_ASSERT_OP(op)                                                               \
