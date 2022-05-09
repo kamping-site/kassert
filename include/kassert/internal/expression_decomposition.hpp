@@ -129,8 +129,8 @@ public:
             " KASSERT((lhs " #op " rhs))");                                                              \
     }
 
-    KASSERT_ASSERT_OP_FORBIDDEN(&&)
-    KASSERT_ASSERT_OP_FORBIDDEN(||)
+    // KASSERT_ASSERT_OP_FORBIDDEN(&&)
+    // KASSERT_ASSERT_OP_FORBIDDEN(||)
 
 #undef KASSERT_ASSERT_OP_FORBIDDEN
 
@@ -209,6 +209,10 @@ public:
         return UnaryExpression<LhsT>{_lhs};
     }
 
+    operator bool() {
+        return _lhs;
+    }
+
     /// @cond IMPLEMENTATION
 
     // Since we cannot implement && and || while preserving short-circuit evaluation, we forbid it
@@ -222,8 +226,8 @@ public:
             " KASSERT((lhs " #op " rhs))");                                                              \
     }
 
-    KASSERT_ASSERT_OP_FORBIDDEN(&&)
-    KASSERT_ASSERT_OP_FORBIDDEN(||)
+    // KASSERT_ASSERT_OP_FORBIDDEN(&&)
+    // KASSERT_ASSERT_OP_FORBIDDEN(||)
 
 #undef KASSERT_ASSERT_OP_FORBIDDEN
 
@@ -265,6 +269,14 @@ struct Decomposer {
         return LhsExpression<LhsT>(lhs);
     }
 };
+
+/// @brief If an expression cannot be decomposed (due to && or ||, to preserve short-circuit evaluation), simply return
+/// the result of the assertion.
+/// @param result Result of the assertion.
+/// @return Result of the assertion.
+inline bool finalize_expr(bool const result) {
+    return result;
+}
 
 /// @brief Transforms \c LhsExpression into \c UnaryExpression, does nothing to a \c Expression (see group description).
 /// @tparam ExprT Type of the expression, either \c LhsExpression or a \c BinaryExpression.
