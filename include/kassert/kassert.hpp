@@ -159,7 +159,25 @@ constexpr bool assertion_enabled(int level) {
 /// \c KASSERT_ASSERTION_LEVEL. This is the macro version of assertion_enabled for use in the preprocessor.
 /// @param level The level of the assertion.
 /// @return Whether the assertion is enabled.
-#define KASSERT_ASSERTION_ENABLED(level) level <= KASSERT_ASSERTION_LEVEL
+#define KASSERT_ENABLED(level) level <= KASSERT_ASSERTION_LEVEL
+
+/// @brief Evaluates an assertion that could not be decomposed (i.e., expressions that use && or ||). If the assertion
+/// fails, prints an error describing the failed assertion.
+/// @param type Actual type of this check. In exception mode, this parameter has always value \c ASSERTION, otherwise
+/// it names the type of the exception that would have been thrown.
+/// @param result Assertion expression result to be checked.
+/// @param where Source code location of the assertion.
+/// @param expr_str Stringified assertion expression.
+/// @return Result of the assertion. If true, the assertion was triggered and the program should be halted.
+inline bool
+evaluate_and_print_assertion(char const* type, bool result, SourceLocation const& where, char const* expr_str) {
+    if (!result) {
+        OStreamLogger(std::cerr) << where.file << ": In function '" << where.function << "':\n"
+                                 << where.file << ":" << where.row << ": FAILED " << type << "\n"
+                                 << "\t" << expr_str << "\n";
+    }
+    return result;
+}
 
 /// @brief Evaluates an assertion expression. If the assertion fails, prints an error describing the failed assertion.
 /// @param type Actual type of this check. In exception mode, this parameter has always value \c ASSERTION, otherwise
