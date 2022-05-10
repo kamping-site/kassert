@@ -159,7 +159,7 @@ constexpr bool assertion_enabled(int level) {
 /// \c KASSERT_ASSERTION_LEVEL. This is the macro version of assertion_enabled for use in the preprocessor.
 /// @param level The level of the assertion.
 /// @return Whether the assertion is enabled.
-#define KASSERT_ASSERTION_ENABLED(level) level <= KASSERT_ASSERTION_LEVEL
+#define KASSERT_ENABLED(level) level <= KASSERT_ASSERTION_LEVEL
 
 /// @brief Evaluates an assertion that could not be decomposed (i.e., expressions that use && or ||). If the assertion
 /// fails, prints an error describing the failed assertion.
