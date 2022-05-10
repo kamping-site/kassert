@@ -415,4 +415,14 @@ TEST(KassertTest, short_circuit_evaluation_works) {
         KASSERT(true && false && side_effect(false), "flag=" << flag);
     };
     EXPECT_EXIT({ and_and_sc(); }, KilledBySignal(SIGABRT), "flag=0");
+
+    // Binary expression + && no short circuit
+    KASSERT(1 + 1 == 2 && side_effect(true));
+    EXPECT_TRUE(flag);
+    flag = false;
+
+    // Binary expression + || with short circuit
+    KASSERT(1 + 1 == 2 || side_effect(false));
+    EXPECT_FALSE(flag);
+    flag = false;
 }

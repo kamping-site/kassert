@@ -107,6 +107,10 @@ public:
         return _result;
     }
 
+    operator bool() {
+        return _result;
+    }
+
     /// @brief Writes this expression with stringified operands to the given assertion logger.
     /// @param out The assertion logger.
     void stringify(OStreamLogger& out) const final {
