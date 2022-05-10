@@ -373,3 +373,56 @@ TEST(KassertTest, unsupported_type_expansion) {
     EXPECT_EXIT({ eq(); }, KilledBySignal(SIGABRT), "<\\?> == <\\?>");
     EXPECT_EXIT({ eq_int(42); }, KilledBySignal(SIGABRT), "<\\?> == 42");
 }
+
+// Test that short-circuit evaluation works
+
+TEST(KassertTest, short_circuit_evaluation_works) {
+    bool flag        = false;
+    auto side_effect = [&](bool const ans) {
+        flag = true;
+        return ans;
+    };
+
+    // short-circuit or
+    KASSERT(true || side_effect(false));
+    EXPECT_FALSE(flag);
+    flag = false;
+
+    // do not short-circuit in negative case
+    KASSERT(false || side_effect(true));
+    EXPECT_TRUE(flag);
+    flag = false;
+
+    // short-circuit and
+    auto and_sc = [&] {
+        KASSERT(false && side_effect(false), "flag=" << flag);
+    };
+    EXPECT_EXIT({ and_sc(); }, KilledBySignal(SIGABRT), "flag=0");
+    flag = false;
+
+    // do not short-circuit in positive case
+    KASSERT(true && side_effect(true));
+    EXPECT_TRUE(flag);
+    flag = false;
+
+    // multiple ors
+    KASSERT(false || true || side_effect(false));
+    EXPECT_FALSE(flag);
+    flag = false;
+
+    // multiple ands
+    auto and_and_sc = [&] {
+        KASSERT(true && false && side_effect(false), "flag=" << flag);
+    };
+    EXPECT_EXIT({ and_and_sc(); }, KilledBySignal(SIGABRT), "flag=0");
+
+    // Binary expression + && no short circuit
+    KASSERT(1 + 1 == 2 && side_effect(true));
+    EXPECT_TRUE(flag);
+    flag = false;
+
+    // Binary expression + || with short circuit
+    KASSERT(1 + 1 == 2 || side_effect(false));
+    EXPECT_FALSE(flag);
+    flag = false;
+}
