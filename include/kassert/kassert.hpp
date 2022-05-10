@@ -1,14 +1,14 @@
-// This file is part of KaMPI.ng.
+// This file is part of KAssert.
 //
-// Copyright 2021-2022 The KaMPI.ng Authors
+// Copyright 2021-2022 The KAssert Authors
 //
-// KaMPI.ng is free software : you can redistribute it and/or modify it under the terms of the GNU Lesser General Public
+// KAssert is free software : you can redistribute it and/or modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
-// version. KaMPI.ng is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+// version. KAssert is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
 // implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
 // for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License along with KaMPI.ng.  If not, see
+// You should have received a copy of the GNU Lesser General Public License along with KAssert.  If not, see
 // <https://www.gnu.org/licenses/>.
 
 /// @file
@@ -54,7 +54,7 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
     #define KASSERT_ASSERTION_LEVEL KASSERT_ASSERTION_LEVEL_NORMAL
 #endif
 
-/// @brief Assertion macro for the KaMPI.ng library. Accepts between one and three parameters.
+/// @brief Assertion macro. Accepts between one and three parameters.
 ///
 /// Assertions are enabled or disabled by setting a compile-time assertion level (`-DKASSERT_ASSERTION_LEVEL=<int>`).
 /// For predefined assertion levels, see @ref assertion-levels.
@@ -71,7 +71,7 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
     KASSERT_KASSERT_HPP_VARARG_HELPER_3( \
         , __VA_ARGS__, KASSERT_3(__VA_ARGS__), KASSERT_2(__VA_ARGS__), KASSERT_1(__VA_ARGS__), ignore)
 
-/// @brief Macro for throwing exceptions inside the KaMPI.ng library. Accepts between one and three parameters.
+/// @brief Macro for throwing exceptions. Accepts between one and three parameters.
 ///
 /// Exceptions are only used in exception mode, which is enabled by using the CMake option
 /// `-DKASSERT_EXCEPTION_MODE=On`. Otherwise, the macro generates a KASSERT() with assertion level
@@ -86,7 +86,7 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
     KASSERT_KASSERT_HPP_VARARG_HELPER_2( \
         , __VA_ARGS__, THROWING_KASSERT_2(__VA_ARGS__), THROWING_KASSERT_1(__VA_ARGS__), ignore)
 
-/// @brief Macro for throwing custom exception inside the KaMPI.ng library.
+/// @brief Macro for throwing custom exception.
 ///
 /// The macro requires at least 2 parameters:
 /// 1. Expression that causes the exception to be thrown if it evaluates to \c false (mandatory).

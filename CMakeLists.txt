@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(
   kassert
-  DESCRIPTION "Assertion library for KaMPI.ng"
+  DESCRIPTION "Assertion library for KaMPIng"
   LANGUAGES CXX
 )
 
