@@ -33,7 +33,9 @@ jobs:
       run: |
         echo CXX=${{ matrix.compiler.cxx }} >> $GITHUB_ENV
         echo CC=${{ matrix.compiler.cc }} >> $GITHUB_ENV
+# Caching from https://stackoverflow.com/questions/59269850/caching-apt-packages-in-github-actions-workflow
     - name: cache-intel-oneapi 
+      if: matrix.compiler.name == 'Intel'
       uses: actions/cache@v2
       id: cache-intel-oneapi 
       with:
