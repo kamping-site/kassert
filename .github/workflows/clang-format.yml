@@ -15,7 +15,7 @@ jobs:
     # Check out HEAD on the branch
         ref: ${{ github.head_ref }}
     - name: install clang-format
-      run: apt-get install clang-format -y
+      run: sudo apt-get install clang-format -y
     # Check out the commit where we diverged from main. Everything from there on will be clang-formatted
     - name: Check out branching point
       run: |
