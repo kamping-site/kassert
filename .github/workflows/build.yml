@@ -40,7 +40,7 @@ jobs:
       id: cache-intel-oneapi 
       with:
         path: "~/intel-openapi/"
-          #        key: "${{secrets.INTEL_ONEAPI_VERSION}}"
+        key: "todo"
     - name: setup-intel-oneapi
       if: matrix.compiler.name == 'Intel'
       env:
