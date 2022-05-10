@@ -33,19 +33,30 @@ jobs:
       run: |
         echo CXX=${{ matrix.compiler.cxx }} >> $GITHUB_ENV
         echo CC=${{ matrix.compiler.cc }} >> $GITHUB_ENV
+    - name: cache-intel-oneapi 
+      uses: actions/cache@v2
+      id: cache-intel-oneapi 
+      with:
+        path: "~/intel-openapi/"
+        key: "${{secrets.INTEL_ONEAPI_VERSION}}"
     - name: setup-intel-oneapi
       if: matrix.compiler.name == 'Intel'
+      env:
+        CACHE_HIT: ${{steps.cache-intel-oneapi.outputs.cache-hit}}
+        INTEL_ONEAPI_VERSION: ${{secrets.INTEL_ONEAPI_VERSION}}
       run: |
-        wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-        sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-        rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-        sudo echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
-        sudo apt-get update
-        sudo apt-get install -y intel-oneapi-common-vars
-    - name: install-icc
-      if: matrix.compiler.name == 'Intel'
-      run: |
-        sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+        if [[ "$CACHE_HIT" == 'true' ]]; then 
+          sudo cp --verbose --force --recursive ~/intel-oneapi/* / 
+        else 
+          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          sudo echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+          sudo apt-get update
+          sudo apt-get install -y intel-oneapi-common-vars intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic="$INTEL_ONEAPI_VERSION"
+          mkdir -p ~/intel-oneapi/
+          sudo dpkg -L intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic | while IFS= read -r f; do if test -f $f; then echo $f; fi; done | xargs cp --parents --target-directory ~/intel-oneapi/
+        fi
     - name: source-intel-vars
       if: matrix.compiler.name == 'Intel'
       run: |
