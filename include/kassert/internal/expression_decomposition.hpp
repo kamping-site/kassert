@@ -101,12 +101,15 @@ public:
           _op(op),
           _rhs(rhs) {}
 
-    /// @brief The boolean result of the expression.
+    /// @brief The boolean result of the expression. This is used when retrieving the expression result after
+    /// decomposition.
     /// @return The boolean result of the expression.
     [[nodiscard]] bool result() const final {
         return _result;
     }
 
+    /// @brief Implicitly cast to bool. This is used when encountering && or ||.
+    /// @return The boolean result of the expression.
     operator bool() {
         return _result;
     }
@@ -196,6 +199,8 @@ public:
         return UnaryExpression<LhsT>{_lhs};
     }
 
+    /// @brief Implicitly cast to bool. This is used when encountering && or ||.
+    /// @return The boolean result of the expression.
     operator bool() {
         return _lhs;
     }
