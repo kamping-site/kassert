@@ -271,7 +271,7 @@ struct Decomposer {
 /// @param expr The expression.
 /// @return The expression as some subclass of \c Expression.
 template <typename ExprT>
-decltype(auto) finalize_expr(ExprT &&expr) {
+decltype(auto) finalize_expr(ExprT&& expr) {
     if constexpr (std::is_base_of_v<Expression, std::remove_reference_t<std::remove_const_t<ExprT>>>) {
         return std::forward<ExprT>(expr);
     } else {
