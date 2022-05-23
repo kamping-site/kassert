@@ -1,19 +1,23 @@
-// This file is part of KaMPI.ng.
+// This file is part of KAssert.
 //
-// Copyright 2021 The KaMPI.ng Authors
+// Copyright 2021 The KAssert Authors
 //
-// KaMPI.ng is free software : you can redistribute it and/or modify it under the terms of the GNU Lesser General Public
+// KAssert is free software : you can redistribute it and/or modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
-// version. KaMPI.ng is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+// version. KAssert is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
 // implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
 // for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License along with KaMPI.ng.  If not, see
+// You should have received a copy of the GNU Lesser General Public License along with KAssert.  If not, see
 // <https://www.gnu.org/licenses/>.
 
 // Overwrite build option and set assertion level to normal
-#undef KAMPING_ASSERTION_LEVEL
-#define KASSERT_ASSERTION_LEVEL kassert::assert::normal // up to normal assertions
+#undef KASSERT_ASSERTION_LEVEL
+#define KASSERT_ASSERTION_LEVEL 30 // up to normal assertions
+
+// Levels for testing
+#define ASSERTION_LEVEL_LOWER_THAN_NORMAL  -10000
+#define ASSERTION_LEVEL_HIGHER_THAN_NORMAL 10000
 
 #include <gmock/gmock.h>
 
@@ -372,4 +376,84 @@ TEST(KassertTest, unsupported_type_expansion) {
 
     EXPECT_EXIT({ eq(); }, KilledBySignal(SIGABRT), "<\\?> == <\\?>");
     EXPECT_EXIT({ eq_int(42); }, KilledBySignal(SIGABRT), "<\\?> == 42");
+}
+
+// Test that short-circuit evaluation works
+
+TEST(KassertTest, short_circuit_evaluation_works) {
+    bool flag        = false;
+    auto side_effect = [&](bool const ans) {
+        flag = true;
+        return ans;
+    };
+
+    // short-circuit or
+    KASSERT(true || side_effect(false));
+    EXPECT_FALSE(flag);
+    flag = false;
+
+    // do not short-circuit in negative case
+    KASSERT(false || side_effect(true));
+    EXPECT_TRUE(flag);
+    flag = false;
+
+    // short-circuit and
+    auto and_sc = [&] {
+        KASSERT(false && side_effect(false), "flag=" << flag);
+    };
+    EXPECT_EXIT({ and_sc(); }, KilledBySignal(SIGABRT), "flag=0");
+    flag = false;
+
+    // do not short-circuit in positive case
+    KASSERT(true && side_effect(true));
+    EXPECT_TRUE(flag);
+    flag = false;
+
+    // multiple ors
+    KASSERT(false || true || side_effect(false));
+    EXPECT_FALSE(flag);
+    flag = false;
+
+    // multiple ands
+    auto and_and_sc = [&] {
+        KASSERT(true && false && side_effect(false), "flag=" << flag);
+    };
+    EXPECT_EXIT({ and_and_sc(); }, KilledBySignal(SIGABRT), "flag=0");
+
+    // Binary expression + && no short circuit
+    KASSERT(1 + 1 == 2 && side_effect(true));
+    EXPECT_TRUE(flag);
+    flag = false;
+
+    // Binary expression + || with short circuit
+    KASSERT(1 + 1 == 2 || side_effect(false));
+    EXPECT_FALSE(flag);
+    flag = false;
+}
+
+// Test that KASSERT_ENABLED disables code
+
+TEST(KassertTest, kassert_enabled_works) {
+    bool flag = false;
+
+    // should not be compiled
+#if KASSERT_ENABLED(ASSERTION_LEVEL_HIGHER_THAN_NORMAL)
+    flag = true;
+#endif
+    EXPECT_FALSE(flag);
+    flag = false;
+
+    // should be compiled
+#if KASSERT_ENABLED(KASSERT_ASSERTION_LEVEL_NORMAL)
+    flag = true;
+#endif
+    EXPECT_TRUE(flag);
+    flag = false;
+
+    // should be compiled
+#if KASSERT_ENABLED(ASSERTION_LEVEL_LOWER_THAN_NORMAL)
+    flag = true;
+#endif
+    EXPECT_TRUE(flag);
+    flag = false;
 }

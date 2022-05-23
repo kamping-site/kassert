@@ -1,14 +1,14 @@
-// This file is part of KaMPI.ng.
+// This file is part of KAssert.
 //
-// Copyright 2021-2022 The KaMPI.ng Authors
+// Copyright 2021-2022 The KAssert Authors
 //
-// KaMPI.ng is free software : you can redistribute it and/or modify it under the terms of the GNU Lesser General Public
+// KAssert is free software : you can redistribute it and/or modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
-// version. KaMPI.ng is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+// version. KAssert is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
 // implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
 // for more details.
 //
-// You should have received a copy of the GNU Lesser General Public License along with KaMPI.ng.  If not, see
+// You should have received a copy of the GNU Lesser General Public License along with KAssert.  If not, see
 // <https://www.gnu.org/licenses/>.
 
 /// @file
@@ -101,9 +101,16 @@ public:
           _op(op),
           _rhs(rhs) {}
 
-    /// @brief The boolean result of the expression.
+    /// @brief The boolean result of the expression. This is used when retrieving the expression result after
+    /// decomposition.
     /// @return The boolean result of the expression.
     [[nodiscard]] bool result() const final {
+        return _result;
+    }
+
+    /// @brief Implicitly cast to bool. This is used when encountering && or ||.
+    /// @return The boolean result of the expression.
+    operator bool() {
         return _result;
     }
 
@@ -116,23 +123,6 @@ public:
     }
 
     /// @cond IMPLEMENTATION
-
-    // Since we cannot implement && and || while preserving short-circuit evaluation, we forbid it
-#define KASSERT_ASSERT_OP_FORBIDDEN(op)                                                                  \
-    template <typename RhsPrimeT>                                                                        \
-    friend BinaryExpression<BinaryExpression<LhsT, RhsT>, RhsPrimeT> operator op(                        \
-        BinaryExpression<LhsT, RhsT>&&, RhsPrimeT const&) {                                              \
-        static_assert(                                                                                   \
-            AlwaysFalse<RhsPrimeT>::value,                                                               \
-            "Operator " #op " is not allowed inside a KASSERT expression."                               \
-            " Instead, you have to add a second pair of parentheses around your expression, i.e., write" \
-            " KASSERT((lhs " #op " rhs))");                                                              \
-    }
-
-    KASSERT_ASSERT_OP_FORBIDDEN(&&)
-    KASSERT_ASSERT_OP_FORBIDDEN(||)
-
-#undef KASSERT_ASSERT_OP_FORBIDDEN
 
     // Overload operators to return a proxy object that decomposes the rhs of the logical operator
 #define KASSERT_ASSERT_OP(op)                                                     \
@@ -209,23 +199,13 @@ public:
         return UnaryExpression<LhsT>{_lhs};
     }
 
-    /// @cond IMPLEMENTATION
-
-    // Since we cannot implement && and || while preserving short-circuit evaluation, we forbid it
-#define KASSERT_ASSERT_OP_FORBIDDEN(op)                                                                  \
-    template <typename RhsT>                                                                             \
-    friend BinaryExpression<LhsT, RhsT> operator op(LhsExpression&&, RhsT const&) {                      \
-        static_assert(                                                                                   \
-            AlwaysFalse<RhsT>::value,                                                                    \
-            "Operator " #op " is not allowed inside a KASSERT expression."                               \
-            " Instead, you have to add a second pair of parentheses around your expression, i.e., write" \
-            " KASSERT((lhs " #op " rhs))");                                                              \
+    /// @brief Implicitly cast to bool. This is used when encountering && or ||.
+    /// @return The boolean result of the expression.
+    operator bool() {
+        return _lhs;
     }
 
-    KASSERT_ASSERT_OP_FORBIDDEN(&&)
-    KASSERT_ASSERT_OP_FORBIDDEN(||)
-
-#undef KASSERT_ASSERT_OP_FORBIDDEN
+    /// @cond IMPLEMENTATION
 
     // Overload binary operators to return a proxy object that decomposes the rhs of the operator.
 #define KASSERT_ASSERT_OP(op)                                                               \
@@ -265,6 +245,14 @@ struct Decomposer {
         return LhsExpression<LhsT>(lhs);
     }
 };
+
+/// @brief If an expression cannot be decomposed (due to && or ||, to preserve short-circuit evaluation), simply return
+/// the result of the assertion.
+/// @param result Result of the assertion.
+/// @return Result of the assertion.
+inline bool finalize_expr(bool const result) {
+    return result;
+}
 
 /// @brief Transforms \c LhsExpression into \c UnaryExpression, does nothing to a \c Expression (see group description).
 /// @tparam ExprT Type of the expression, either \c LhsExpression or a \c BinaryExpression.
