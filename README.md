@@ -21,6 +21,14 @@ KASSERT(1 + 1 == 3, "The world is a lie!"); // use default assertion level (kass
 KASSERT(1 + 1 == 3); // omit custom error message
 ```
 
+You can also use C++ streams to build custom error messages on the fly.
+
+```c++
+int a = 1;
+int b = 3;
+KASSERT(a + a == b, "Under the assumption that a is " << a << ", the world is a lie!");
+```
+
 Use `THROWING_KASSERT` to throw an exception if the assertion fails. 
 This requires the library to be build in exception mode (`-DKASSERT_EXCEPTION_MODE=On`). 
 If exception mode is not enabled, `THROWING_KASSERT` acts the same as `KASSERT`.
