@@ -55,26 +55,42 @@ class Logger {
 public:
     /// @brief Construct the object with an underlying streaming object.
     /// @param out The underlying streaming object.
-    explicit Logger(StreamT&& out) : _out(std::forward<StreamT>(out)) {}
+    explicit Logger(StreamT&& out) : _out_buffer(), _out(std::forward<StreamT>(out)) {}
 
     /// @brief Forward all values for which \c StreamT::operator<< is defined to the underlying streaming object.
     /// @param value Value to be stringified.
     /// @tparam ValueT Type of the value to be stringified.
     template <typename ValueT, std::enable_if_t<internal::is_streamable_type<std::ostream, ValueT>, int> = 0>
     Logger<StreamT>& operator<<(ValueT&& value) {
-        _out << std::forward<ValueT>(value);
+        // we buffer logged values and only flush when the destructor is called or the buffer is flushed manually
+        // this prevents interleaving of the outputs of multiple processes (e.g. MPI ranks)
+        _out_buffer << std::forward<ValueT>(value);
         return *this;
     }
 
     /// @brief Get the underlying streaming object.
+    /// Flushes all buffered logs to the underlying stream before returning a reference to the stream.
     /// @return The underlying streaming object.
     StreamT&& stream() {
+        flush();
         return std::forward<StreamT>(_out);
     }
 
+    /// @brief Flushes all buffered logs to the underlying stream.
+    void flush() {
+        _out << _out_buffer.str();
+        _out_buffer.str(std::string{});
+    }
+
+    /// @brief Destructor of the logger stream, which flushes all buffered logs to the underlying stream upon
+    /// destruction.
+    ~Logger() {
+        flush();
+    }
+
 private:
-    /// @brief The underlying streaming object.
-    StreamT&& _out;
+    std::stringstream _out_buffer; ///> @brief The output buffer.
+    StreamT&&         _out;        ///> @brief The underlying streaming object.
 };
 } // namespace kassert
 
