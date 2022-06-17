@@ -78,7 +78,7 @@ public:
 
     /// @brief Flushes all buffered logs to the underlying stream.
     void flush() {
-        _out << _out_buffer.str();
+        _out << _out_buffer.str() << std::flush;
         _out_buffer.str(std::string{});
     }
 
