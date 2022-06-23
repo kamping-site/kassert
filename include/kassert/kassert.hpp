@@ -99,7 +99,8 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
 ///
 /// Any other parameter is passed to the constructor of the exception class.
 #define THROWING_KASSERT_SPECIFIED(expression, message, exception_type, ...) \
-    KASSERT_KASSERT_HPP_THROWING_KASSERT_CUSTOM_IMPL(expression, exception_type, message, ##__VA_ARGS__)
+    KASSERT_KASSERT_HPP_THROWING_KASSERT_CUSTOM_IMPL(                        \
+        expression, kassert::assert::kthrow, exception_type, message, ##__VA_ARGS__)
 
 namespace kassert::internal {
 /// @brief Describes a source code location.

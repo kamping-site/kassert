@@ -88,38 +88,40 @@
 // In KASSERT_EXCEPTION_MODE, we throw an exception similar to the implementation of KASSERT(), although expression
 // decomposition in exceptions is currently unsupported. Otherwise, the macro delegates to KASSERT().
 #ifdef KASSERT_EXCEPTION_MODE
-    #define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(expression, exception_type, message, ...) \
-        do {                                                                                             \
-            if (!(expression)) {                                                                         \
-                throw exception_type(message, ##__VA_ARGS__);                                            \
-            }                                                                                            \
+    #define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(    \
+        expression, assertion_level, exception_type, message, ...) \
+        do {                                                       \
+            if (!(expression)) {                                   \
+                throw exception_type(message, ##__VA_ARGS__);      \
+            }                                                      \
         } while (false)
 #else
-    #define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(expression, exception_type, message, ...) \
-        do {                                                                                             \
-            if constexpr (kassert::internal::assertion_enabled(kassert::assert::kthrow)) {               \
-                if (!(expression)) {                                                                     \
-                    kassert::Logger<std::ostream&>(std::cerr)                                            \
-                        << (exception_type(message, ##__VA_ARGS__).what()) << "\n";                      \
-                    std::abort();                                                                        \
-                }                                                                                        \
-            }                                                                                            \
+    #define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                     \
+        expression, assertion_level, exception_type, message, ...)                  \
+        do {                                                                        \
+            if constexpr (kassert::internal::assertion_enabled(assertion_level)) {  \
+                if (!(expression)) {                                                \
+                    kassert::Logger<std::ostream&>(std::cerr)                       \
+                        << (exception_type(message, ##__VA_ARGS__).what()) << "\n"; \
+                    std::abort();                                                   \
+                }                                                                   \
+            }                                                                       \
         } while (false)
 #endif
 
-#define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message) \
-    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                \
-        expression, kassert::KassertException,                         \
-        kassert::internal::build_what(                                 \
-            #expression, KASSERT_KASSERT_HPP_SOURCE_LOCATION,          \
+#define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message)  \
+    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                 \
+        expression, kassert::assert::kthrow, kassert::KassertException, \
+        kassert::internal::build_what(                                  \
+            #expression, KASSERT_KASSERT_HPP_SOURCE_LOCATION,           \
             (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str()))
 
-#define KASSERT_KASSERT_HPP_THROWING_KASSERT_CUSTOM_IMPL(expression, exception_type, message, ...)         \
-    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                    \
-        expression, exception_type,                                                                        \
-        kassert::internal::build_what(                                                                     \
-            #expression, KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                              \
-            (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str()), \
+#define KASSERT_KASSERT_HPP_THROWING_KASSERT_CUSTOM_IMPL(expression, assertion_level, exception_type, message, ...) \
+    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                             \
+        expression, assertion_level, exception_type,                                                                \
+        kassert::internal::build_what(                                                                              \
+            #expression, KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                                       \
+            (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str()),          \
         ##__VA_ARGS__)
 
 // THROWING_KASSERT() chooses the right implementation depending on its number of arguments.
