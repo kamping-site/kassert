@@ -261,7 +261,7 @@ TEST(KassertTest, primitive_type_expansion_limitations) {
         KASSERT(!lhs_neg == rhs);
     };
 
-    EXPECT_EXIT({ generic_neg_eq(5, 10); }, KilledBySignal(SIGABRT), "0 == 10"); // cannot expand !lhs_neg
+    EXPECT_EXIT({ generic_neg_eq(5, 10); }, KilledBySignal(SIGABRT), "false == 10"); // cannot expand !lhs_neg
 }
 
 TEST(KassertTest, chained_rel_ops_expansion) {
@@ -401,7 +401,7 @@ TEST(KassertTest, short_circuit_evaluation_works) {
     auto and_sc = [&] {
         KASSERT(false && side_effect(false), "flag=" << flag);
     };
-    EXPECT_EXIT({ and_sc(); }, KilledBySignal(SIGABRT), "flag=0");
+    EXPECT_EXIT({ and_sc(); }, KilledBySignal(SIGABRT), "flag=false");
     flag = false;
 
     // do not short-circuit in positive case
@@ -418,7 +418,7 @@ TEST(KassertTest, short_circuit_evaluation_works) {
     auto and_and_sc = [&] {
         KASSERT(true && false && side_effect(false), "flag=" << flag);
     };
-    EXPECT_EXIT({ and_and_sc(); }, KilledBySignal(SIGABRT), "flag=0");
+    EXPECT_EXIT({ and_and_sc(); }, KilledBySignal(SIGABRT), "flag=false");
 
     // Binary expression + && no short circuit
     KASSERT(1 + 1 == 2 && side_effect(true));
