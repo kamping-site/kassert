@@ -55,7 +55,9 @@ class Logger {
 public:
     /// @brief Construct the object with an underlying streaming object.
     /// @param out The underlying streaming object.
-    explicit Logger(StreamT&& out) : _out_buffer(), _out(std::forward<StreamT>(out)) {}
+    explicit Logger(StreamT&& out) : _out_buffer(), _out(std::forward<StreamT>(out)) {
+	_out_buffer << std::boolalpha;
+    }
 
     /// @brief Forward all values for which \c StreamT::operator<< is defined to the underlying streaming object.
     /// @param value Value to be stringified.
@@ -125,6 +127,7 @@ using RrefOStringstreamLogger = Logger<std::ostringstream&&>;
 } // namespace kassert::internal
 
 namespace kassert {
+
 /// @brief Stringification of `std::vector<T>` in assertions.
 ///
 /// Outputs a `std::vector<T>` in the following format, where `element i` are the stringified elements of the
