@@ -56,7 +56,7 @@ public:
     /// @brief Construct the object with an underlying streaming object.
     /// @param out The underlying streaming object.
     explicit Logger(StreamT&& out) : _out_buffer(), _out(std::forward<StreamT>(out)) {
-	_out_buffer << std::boolalpha;
+        _out_buffer << std::boolalpha;
     }
 
     /// @brief Forward all values for which \c StreamT::operator<< is defined to the underlying streaming object.
