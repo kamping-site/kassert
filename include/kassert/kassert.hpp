@@ -69,7 +69,13 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
 /// 3. The level of the assertion (optional, default: `kassert::assert::normal`, see @ref assertion-levels).
 #define KASSERT(...)                     \
     KASSERT_KASSERT_HPP_VARARG_HELPER_3( \
-        , __VA_ARGS__, KASSERT_3(__VA_ARGS__), KASSERT_2(__VA_ARGS__), KASSERT_1(__VA_ARGS__), ignore)
+        ,                                \
+        __VA_ARGS__,                     \
+        KASSERT_3(__VA_ARGS__),          \
+        KASSERT_2(__VA_ARGS__),          \
+        KASSERT_1(__VA_ARGS__),          \
+        ignore                           \
+    )
 
 /// @brief Macro for throwing exceptions. Accepts between one and three parameters.
 ///
@@ -84,7 +90,12 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
 /// `std::cout`.
 #define THROWING_KASSERT(...)            \
     KASSERT_KASSERT_HPP_VARARG_HELPER_2( \
-        , __VA_ARGS__, THROWING_KASSERT_2(__VA_ARGS__), THROWING_KASSERT_1(__VA_ARGS__), ignore)
+        ,                                \
+        __VA_ARGS__,                     \
+        THROWING_KASSERT_2(__VA_ARGS__), \
+        THROWING_KASSERT_1(__VA_ARGS__), \
+        ignore                           \
+    )
 
 /// @brief Macro for throwing custom exception.
 ///
