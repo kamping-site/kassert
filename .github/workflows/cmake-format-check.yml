@@ -9,9 +9,7 @@ on:
 jobs:
   cmake-formatting-check:
     name: CMake Formatting Check
-    runs-on: self-hosted
-    container:
-      image: "localhost:5000/kamping-ci"
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
