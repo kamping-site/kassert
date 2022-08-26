@@ -54,19 +54,22 @@
 //   dead loop).
 // - `evaluate_and_print_assertion` evaluates the assertion and prints an error message if it failed.
 // - The call to `std::abort()` is not wrapped in a function to keep the stack trace clean.
-#define KASSERT_KASSERT_HPP_KASSERT_IMPL(type, expression, message, level)                                 \
-    do {                                                                                                   \
-        if constexpr (kassert::internal::assertion_enabled(level)) {                                       \
-            KASSERT_KASSERT_HPP_DIAGNOSTIC_PUSH                                                            \
-            KASSERT_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES                                              \
-            if (!kassert::internal::evaluate_and_print_assertion(                                          \
-                    type, kassert::internal::finalize_expr(kassert::internal::Decomposer{} <= expression), \
-                    KASSERT_KASSERT_HPP_SOURCE_LOCATION, #expression)) {                                   \
-                kassert::Logger<std::ostream&>(std::cerr) << message << "\n";                              \
-                std::abort();                                                                              \
-            }                                                                                              \
-            KASSERT_KASSERT_HPP_DIAGNOSTIC_POP                                                             \
-        }                                                                                                  \
+#define KASSERT_KASSERT_HPP_KASSERT_IMPL(type, expression, message, level)                           \
+    do {                                                                                             \
+        if constexpr (kassert::internal::assertion_enabled(level)) {                                 \
+            KASSERT_KASSERT_HPP_DIAGNOSTIC_PUSH                                                      \
+            KASSERT_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES                                        \
+            if (!kassert::internal::evaluate_and_print_assertion(                                    \
+                    type,                                                                            \
+                    kassert::internal::finalize_expr(kassert::internal::Decomposer{} <= expression), \
+                    KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                             \
+                    #expression                                                                      \
+                )) {                                                                                 \
+                kassert::Logger<std::ostream&>(std::cerr) << message << "\n";                        \
+                std::abort();                                                                        \
+            }                                                                                        \
+            KASSERT_KASSERT_HPP_DIAGNOSTIC_POP                                                       \
+        }                                                                                            \
     } while (false)
 
 // Expands a macro depending on its number of arguments. For instance,
@@ -107,20 +110,28 @@
         } while (false)
 #endif
 
-#define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message) \
-    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                \
-        expression, kassert::KassertException,                         \
-        kassert::internal::build_what(                                 \
-            #expression, KASSERT_KASSERT_HPP_SOURCE_LOCATION,          \
-            (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str()))
+#define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message)                                   \
+    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                  \
+        expression,                                                                                      \
+        kassert::KassertException,                                                                       \
+        kassert::internal::build_what(                                                                   \
+            #expression,                                                                                 \
+            KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                                         \
+            (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
+        )                                                                                                \
+    )
 
-#define KASSERT_KASSERT_HPP_THROWING_KASSERT_CUSTOM_IMPL(expression, exception_type, message, ...)         \
-    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                    \
-        expression, exception_type,                                                                        \
-        kassert::internal::build_what(                                                                     \
-            #expression, KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                              \
-            (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str()), \
-        ##__VA_ARGS__)
+#define KASSERT_KASSERT_HPP_THROWING_KASSERT_CUSTOM_IMPL(expression, exception_type, message, ...)       \
+    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                  \
+        expression,                                                                                      \
+        exception_type,                                                                                  \
+        kassert::internal::build_what(                                                                   \
+            #expression,                                                                                 \
+            KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                                         \
+            (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
+        ),                                                                                               \
+        ##__VA_ARGS__                                                                                    \
+    )
 
 // THROWING_KASSERT() chooses the right implementation depending on its number of arguments.
 #define THROWING_KASSERT_2(expression, message) KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message)

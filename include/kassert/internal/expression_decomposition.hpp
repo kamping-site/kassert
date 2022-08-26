@@ -128,10 +128,16 @@ public:
 #define KASSERT_ASSERT_OP(op)                                                     \
     template <typename RhsPrimeT>                                                 \
     friend BinaryExpression<BinaryExpression<LhsT, RhsT>, RhsPrimeT> operator op( \
-        BinaryExpression<LhsT, RhsT>&& lhs, RhsPrimeT const& rhs_prime) {         \
+        BinaryExpression<LhsT, RhsT>&& lhs,                                       \
+        RhsPrimeT const&               rhs_prime                                  \
+    ) {                                                                           \
         using namespace std::string_view_literals;                                \
         return BinaryExpression<BinaryExpression<LhsT, RhsT>, RhsPrimeT>(         \
-            lhs.result() op rhs_prime, lhs, #op##sv, rhs_prime);                  \
+            lhs.result() op rhs_prime,                                            \
+            lhs,                                                                  \
+            #op##sv,                                                              \
+            rhs_prime                                                             \
+        );                                                                        \
     }
 
     KASSERT_ASSERT_OP(&)
