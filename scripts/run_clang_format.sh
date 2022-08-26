@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/bash
 
 if [[ "$PWD" == */scripts ]]; then
 	echo "Script must be run from the project's root directory"
