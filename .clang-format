@@ -1,5 +1,5 @@
 AccessModifierOffset: '-4'
-AlignAfterOpenBracket: AlwaysBreak
+AlignAfterOpenBracket: BlockIndent
 AlignConsecutiveMacros: 'true'
 AlignConsecutiveAssignments: 'true'
 AlignConsecutiveDeclarations: 'true'
@@ -18,8 +18,8 @@ AllowShortLoopsOnASingleLine: 'false'
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: 'false'
 AlwaysBreakTemplateDeclarations: 'Yes'
-BinPackArguments: 'true'
-BinPackParameters: 'true'
+BinPackArguments: 'false'
+BinPackParameters: 'false'
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BreakBeforeTernaryOperators: 'true'
@@ -70,3 +70,7 @@ SpacesInSquareBrackets: 'false'
 Standard: Auto
 TabWidth: '4'
 UseTab: Never
+EmptyLineBeforeAccessModifier: LogicalBlock
+EmptyLineAfterAccessModifier: Never
+QualifierAlignment: Custom
+QualifierOrder: ['static', 'inline', 'constexpr', 'type', 'const', 'volatile']

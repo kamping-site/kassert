@@ -53,7 +53,10 @@ constexpr int heavy = kassert::assert::normal + 1;
 TEST(KassertTest, kassert_overloads_compile) {
     // test that all KASSERT overloads compile
     EXPECT_EXIT(
-        { KASSERT(false, "__false_is_false_3__", assert::light); }, KilledBySignal(SIGABRT), "__false_is_false_3__");
+        { KASSERT(false, "__false_is_false_3__", assert::light); },
+        KilledBySignal(SIGABRT),
+        "__false_is_false_3__"
+    );
     EXPECT_EXIT({ KASSERT(false, "__false_is_false_2__"); }, KilledBySignal(SIGABRT), "__false_is_false_2__");
     EXPECT_EXIT({ KASSERT(false); }, KilledBySignal(SIGABRT), "");
 }
@@ -93,7 +96,7 @@ class ZeroCustomArgException : public std::exception {
 public:
     ZeroCustomArgException(std::string) {}
 
-    const char* what() const throw() final {
+    char const* what() const throw() final {
         return "ZeroCustomArgException";
     }
 };
@@ -102,7 +105,7 @@ class SingleCustomArgException : public std::exception {
 public:
     SingleCustomArgException(std::string, int) {}
 
-    const char* what() const throw() final {
+    char const* what() const throw() final {
         return "SingleCustomArgException";
     }
 };
@@ -113,11 +116,15 @@ TEST(KassertTest, kthrow_custom_compiles) {
     EXPECT_THROW({ THROWING_KASSERT_SPECIFIED(false, "", SingleCustomArgException, 43); }, SingleCustomArgException);
 #else  // KASSERT_EXCEPTION_MODE
     EXPECT_EXIT(
-        { THROWING_KASSERT_SPECIFIED(false, "", ZeroCustomArgException); }, KilledBySignal(SIGABRT),
-        "ZeroCustomArgException");
+        { THROWING_KASSERT_SPECIFIED(false, "", ZeroCustomArgException); },
+        KilledBySignal(SIGABRT),
+        "ZeroCustomArgException"
+    );
     EXPECT_EXIT(
-        { THROWING_KASSERT_SPECIFIED(false, "", SingleCustomArgException, 43); }, KilledBySignal(SIGABRT),
-        "SingleCustomArgException");
+        { THROWING_KASSERT_SPECIFIED(false, "", SingleCustomArgException, 43); },
+        KilledBySignal(SIGABRT),
+        "SingleCustomArgException"
+    );
 #endif // KASSERT_EXCEPTION_MODE
 }
 
@@ -257,7 +264,7 @@ TEST(KassertTest, primitive_type_expansion) {
 
 TEST(KassertTest, primitive_type_expansion_limitations) {
     // negation + relation
-    auto generic_neg_eq = [](const auto lhs_neg, const auto rhs) {
+    auto generic_neg_eq = [](auto const lhs_neg, auto const rhs) {
         KASSERT(!lhs_neg == rhs);
     };
 

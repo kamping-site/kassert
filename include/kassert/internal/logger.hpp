@@ -30,7 +30,9 @@ struct is_streamable_type_impl : std::false_type {};
 // Partially specialize template if StreamT::operator<<(ValueT) is valid.
 template <typename StreamT, typename ValueT>
 struct is_streamable_type_impl<
-    StreamT, ValueT, std::void_t<decltype(std::declval<StreamT&>() << std::declval<ValueT>())>> : std::true_type {};
+    StreamT,
+    ValueT,
+    std::void_t<decltype(std::declval<StreamT&>() << std::declval<ValueT>())>> : std::true_type {};
 
 /// @brief Determines whether a value of type \c ValueT can be streamed into an output stream of type \c StreamT.
 /// @ingroup expression-expansion
