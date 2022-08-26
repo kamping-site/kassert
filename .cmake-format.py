@@ -4,27 +4,15 @@
 with section("parse"):
     # Specify structure for custom cmake functions
     additional_commands = {
-        'katestophe_add_test_executable': {
-            'flags': [],
-            'kwargs': {'FILES': '*'}
-        },
-        'katestrophe_add_mpi_test': {
-            'flags': ['DISCOVER_TESTS'],
-            'kwargs': {'CORES': '*'}
-        },
-        'katestrophe_add_compilation_failure_test': {
-            'flags': ['NO_EXCEPTION_MODE'],
-            'kwargs': {'TARGET': '1', 'FILES': '*', 'SECTIONS': '*', 'LIBRARIES': '*'}
-        },
-        'kamping_register_test': {
+        'kassert_register_test': {
             'flags': ['NO_EXCEPTION_MODE'],
             'kwargs': {'FILES': '*'}
         },
-        'kamping_register_mpi_test': {
+        'kassert_register_mpi_test': {
             'flags': ['NO_EXCEPTION_MODE'],
             'kwargs': {'FILES': '*', 'CORES': '*'}
         },
-        'kamping_register_compilation_failure_test': {
+        'kassert_register_compilation_failure_test': {
             'flags': ['NO_EXCEPTION_MODE'],
             'kwargs': {'FILES': '*', 'SECTIONS': '*', 'LIBRARIES': '*'}
         },
