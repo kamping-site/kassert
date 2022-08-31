@@ -1,6 +1,6 @@
 # KAssert: Karlsruhe Assertion Library for C++
 
-<!-- ![KAssert logo](./docs/images/logo.svg) -->
+![KAssert logo](./docs/kassert-logo.svg)
 
 KAssert is the assertion library used by KaMPIng, the Karlsruhe MPI Wrapper.
 However, KAssert does not depend on MPI and can be used in non-MPI code.
