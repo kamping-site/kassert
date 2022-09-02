@@ -28,9 +28,7 @@
 
 /// @brief Assertion levels
 namespace kassert::assert {
-/// @defgroup assertion-levels Assertion levels
-/// Predefined assertion levels.
-///
+/// @addtogroup assertion-levels Assertion levels
 /// @{
 
 /// @brief Assertion level for exceptions if exception mode is disabled.
@@ -55,6 +53,7 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
 #endif
 
 /// @brief Assertion macro. Accepts between one and three parameters.
+/// @ingroup assertion
 ///
 /// Assertions are enabled or disabled by setting a compile-time assertion level (`-DKASSERT_ASSERTION_LEVEL=<int>`).
 /// For predefined assertion levels, see @ref assertion-levels.
@@ -78,6 +77,7 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
     )
 
 /// @brief Macro for throwing exceptions. Accepts between one and three parameters.
+/// @ingroup assertion
 ///
 /// Exceptions are only used in exception mode, which is enabled by using the CMake option
 /// `-DKASSERT_EXCEPTION_MODE=On`. Otherwise, the macro generates a KASSERT() with assertion level
@@ -98,6 +98,7 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
     )
 
 /// @brief Macro for throwing custom exception.
+/// @ingroup assertion
 ///
 /// The macro requires at least 2 parameters:
 /// 1. Expression that causes the exception to be thrown if it evaluates to \c false (mandatory).
