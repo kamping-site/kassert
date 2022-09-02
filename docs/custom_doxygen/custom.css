@@ -1,8 +1,8 @@
 /* custom.css */
 html {
-    --primary-color: #008080;
+    --primary-color: #3cb1c3;
 }
   
 html.dark-mode {
-    --primary-color: #008080;
+    --primary-color: #3cb1c3;
 }
