@@ -2,7 +2,7 @@ name: C/C++ CI
 
 on:
   pull_request:
-    paths-ignore:
+    paths:
       - 'docs/**'
       - 'README.md'
 
