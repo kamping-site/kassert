@@ -1,0 +1,23 @@
+name: Doxygen Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+jobs:
+  doxygen-check:
+    name: Doxygen Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: version
+        run: doxygen --version
+      - name: cmake
+        run: cmake -B build
+      - name: run-doxygen
+        run: cmake --build build/ --target docs
