@@ -191,13 +191,6 @@ evaluate_and_print_assertion(char const* type, bool result, SourceLocation const
     return result;
 }
 
-/// @brief Evaluates an assertion expression. If the assertion fails, prints an error describing the failed assertion.
-/// @param type Actual type of this check. In exception mode, this parameter has always value \c ASSERTION, otherwise
-/// it names the type of the exception that would have been thrown.
-/// @param expr Assertion expression to be checked.
-/// @param where Source code location of the assertion.
-/// @param expr_str Stringified assertion expression.
-/// @return Result of the assertion. If true, the assertion was triggered and the program should be halted.
 inline bool
 evaluate_and_print_assertion(char const* type, Expression&& expr, SourceLocation const& where, char const* expr_str) {
     if (!expr.result()) {
