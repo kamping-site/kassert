@@ -1,10 +1,11 @@
 # KAssert: Karlsruhe Assertion Library for C++
 <p align="center">
-   <img src="https://raw.githubusercontent.com/kamping-site/kassert/docs/images/logo.svg"\>
+   <img src="https://raw.githubusercontent.com/kamping-site/kassert/main/docs/images/logo.svg"\>
 </p>
 
 KAssert is the assertion library used by KaMPIng, the Karlsruhe MPI Wrapper.
 However, KAssert does not depend on MPI and can be used in non-MPI code.
+For more information, see the README below and the [documentation][].
 
 ## Features
 
@@ -77,3 +78,5 @@ constexpr int heavy = KAMPING_ASSERTION_LEVEL_HEAVY;
 ## LICENSE
 
 KAssert is released under the GNU Lesser General Public License. See [COPYING](COPYING) and [COPYING.LESSER](COPYING.LESSER) for details.
+
+[documentation]: https://kamping-site.github.io/kassert/
