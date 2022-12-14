@@ -32,7 +32,7 @@ KASSERT(a + a == b, "Under the assumption that a is " << a << ", the world is a 
 ```
 
 Use `THROWING_KASSERT` to throw an exception if the assertion fails.
-This requires the library to be build in exception mode (`-DKASSERT_EXCEPTION_MODE=On`).
+This requires the CMake option `KASSERT_EXCEPTION_MODE` to be set.
 If exception mode is not enabled, `THROWING_KASSERT` acts the same as `KASSERT`.
 
 ```c++
@@ -51,11 +51,10 @@ argument, followed by the remaining arguments `[, ...]` passed to `THROWING_KASS
 
 ### Assertion Levels
 
-To control which assertions are enabled or disabled, you must supply the CMake option `-DKASSERT_ASSERTION_LEVEL=<numeric>`.
-If omitted, the assertion level is set to `0`, which disables all assertions.
-
 Assertions are enabled if their assertion level (optional third parameter of `KASSERT`) is **less than or equal to** the active assertion level.
 The default level is `kassert::assert::normal` (30).
+Set the CMake variable `KASSERT_ASSERTION_LEVEL` to the numeric value of the desired assertion level.
+If omitted, the assertion level is set to `0`, which disables all assertions.
 
 ### Custom Assertion Levels
 
