@@ -67,7 +67,7 @@ constexpr int light = KAMPING_ASSERTION_LEVEL_LIGHT;
 
 #define KAMPING_ASSERTION_LEVEL_HEAVY 40
 constexpr int heavy = KAMPING_ASSERTION_LEVEL_HEAVY;
-} // namespace kamping::assert 
+} // namespace kamping::assert
 ```
 
 ## Requirements
