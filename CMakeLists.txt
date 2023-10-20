@@ -14,7 +14,7 @@ endif ()
 include(FetchContent)
 if (POLICY CMP0135)
     cmake_policy(SET CMP0135 OLD)
-endif()
+endif ()
 set(fetch_content_deps googletest)
 
 set(fetch_content_supported_flags "")
@@ -28,34 +28,34 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.28)
     list(APPEND fetch_content_supported_flags EXCLUDE_FROM_ALL)
 endif ()
 
-# Using CMake >= 3.24 we override find_package and it "just works".
-# For older versions we simulate the same behavior by first making the dependency
-# available and then writing an empty `googletest-config.cmake` such that
-# find_package does not fail.
+# Using CMake >= 3.24 we override find_package and it "just works". For older versions we simulate the same behavior by
+# first making the dependency available and then writing an empty `googletest-config.cmake` such that find_package does
+# not fail.
 #
-# This does not allow for easy overriding of dependencies in top-level projects
-# because then the toplevel also has to override the config file, but this is
-# the price to pay for using old CMake versions.
+# This does not allow for easy overriding of dependencies in top-level projects because then the toplevel also has to
+# override the config file, but this is the price to pay for using old CMake versions.
 #
-# When using CMake >= 3.24 a library user can override the depencies by
-# providing an earlier FetchContent_Declare declaration with the `OVERRIDE_FIND_PACKAGE` flag enabled.
-# Only the first call to FetchContent_Declare for each dependency will be registered.
+# When using CMake >= 3.24 a library user can override the depencies by providing an earlier FetchContent_Declare
+# declaration with the `OVERRIDE_FIND_PACKAGE` flag enabled. Only the first call to FetchContent_Declare for each
+# dependency will be registered.
 
 FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-    ${fetch_content_supported_flags}
+    googletest URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+                   ${fetch_content_supported_flags}
 )
 
-function(ensure_googletest)
+function (ensure_googletest)
     if (CMAKE_VERSION VERSION_LESS 3.24)
-        if(NOT googletest_POPULATED)
+        if (NOT googletest_POPULATED)
             FetchContent_MakeAvailable(googletest)
-            set(googletest_DIR ${CMAKE_BINARY_DIR}/my_pkgRedirects/ PARENT_SCOPE)
+            set(googletest_DIR
+                ${CMAKE_BINARY_DIR}/my_pkgRedirects/
+                PARENT_SCOPE
+            )
             file(WRITE ${CMAKE_BINARY_DIR}/my_pkgRedirects/googletest-config.cmake "")
-        endif()
-    endif()
-endfunction()
+        endif ()
+    endif ()
+endfunction ()
 
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -107,38 +107,37 @@ target_include_directories(kassert_base INTERFACE "$<BUILD_INTERFACE:${CMAKE_CUR
 # set C++ standard to C++17
 target_compile_features(kassert_base INTERFACE cxx_std_17)
 add_library(kassert_warnings INTERFACE)
-target_compile_options(kassert_warnings INTERFACE
-    "-Wall"
-    "-Wextra"
-    "-Wconversion"
-    "-Wnon-virtual-dtor"
-    "-Woverloaded-virtual"
-    "-Wshadow"
-    "-Wsign-conversion"
-    "-Wundef"
-    "-Wunreachable-code"
-    "-Wunused"
+target_compile_options(
+    kassert_warnings
+    INTERFACE "-Wall"
+              "-Wextra"
+              "-Wconversion"
+              "-Wnon-virtual-dtor"
+              "-Woverloaded-virtual"
+              "-Wshadow"
+              "-Wsign-conversion"
+              "-Wundef"
+              "-Wunreachable-code"
+              "-Wunused"
 )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    target_compile_options(kassert_warnings INTERFACE
-        "-Wcast-align"
-        "-Wnull-dereference"
-        "-Wpedantic"
-        "-Wextra-semi"
-        "-Wno-gnu-zero-variadic-macro-arguments"
+    target_compile_options(
+        kassert_warnings INTERFACE "-Wcast-align" "-Wnull-dereference" "-Wpedantic" "-Wextra-semi"
+                                   "-Wno-gnu-zero-variadic-macro-arguments"
     )
 endif ()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    target_compile_options(kassert_warnings INTERFACE
-        "-Wcast-align"
-        "-Wnull-dereference"
-        "-Wpedantic"
-        "-Wnoexcept"
-        "-Wsuggest-attribute=const"
-        "-Wsuggest-attribute=noreturn"
-        "-Wsuggest-override"
+    target_compile_options(
+        kassert_warnings
+        INTERFACE "-Wcast-align"
+                  "-Wnull-dereference"
+                  "-Wpedantic"
+                  "-Wnoexcept"
+                  "-Wsuggest-attribute=const"
+                  "-Wsuggest-attribute=noreturn"
+                  "-Wsuggest-override"
     )
 endif ()
 
