@@ -58,10 +58,8 @@ target_include_directories(kassert_base INTERFACE "$<BUILD_INTERFACE:${CMAKE_CUR
 
 # set C++ standard to C++17
 target_compile_features(kassert_base INTERFACE cxx_std_17)
-
-list(
-    APPEND
-    KASSERT_WARNING_FLAGS
+add_library(kassert_warnings INTERFACE)
+target_compile_options(kassert_warnings INTERFACE
     "-Wall"
     "-Wextra"
     "-Wconversion"
@@ -75,9 +73,7 @@ list(
 )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    list(
-        APPEND
-        KASSERT_WARNING_FLAGS
+    target_compile_options(kassert_warnings INTERFACE
         "-Wcast-align"
         "-Wnull-dereference"
         "-Wpedantic"
@@ -87,9 +83,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif ()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    list(
-        APPEND
-        KASSERT_WARNING_FLAGS
+    target_compile_options(kassert_warnings INTERFACE
         "-Wcast-align"
         "-Wnull-dereference"
         "-Wpedantic"
@@ -102,7 +96,7 @@ endif ()
 
 # OFF by default.
 if (KASSERT_WARNINGS_ARE_ERRORS)
-    list(APPEND KASSERT_WARNING_FLAGS "-Werror")
+    target_compile_options(kassert_warnings INTERFACE "-Werror")
 endif ()
 
 # Actual library target with compile definitions

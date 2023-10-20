@@ -10,7 +10,7 @@ function (kassert_register_test KASSERT_TARGET_NAME)
     cmake_parse_arguments("KASSERT" "EXCEPTION_MODE" "" "FILES" ${ARGN})
     add_executable(${KASSERT_TARGET_NAME} ${KASSERT_FILES})
     target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE gtest gtest_main gmock kassert_base)
-    target_compile_options(${KASSERT_TARGET_NAME} PRIVATE ${KASSERT_WARNING_FLAGS})
+    target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE kassert_warnings)
     gtest_discover_tests(${KASSERT_TARGET_NAME} WORKING_DIRECTORY ${PROJECT_DIR})
 
     if (KASSERT_EXCEPTION_MODE)
