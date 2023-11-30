@@ -5,6 +5,11 @@ project(
     LANGUAGES CXX
 )
 
+# include guard to prevent duplicate targets when including this project as a subdirectory
+if (TARGET kassert)
+    return()
+endif ()
+
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # folder support for IDEs
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
