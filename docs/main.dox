@@ -78,7 +78,7 @@ constexpr int heavy = KAMPING_ASSERTION_LEVEL_HEAVY;
    
 ## LICENSE
 
-KAssert is released under the GNU Lesser General Public License. See [COPYING](https://github.com/kamping-site/kassert/blob/main/COPYING) and [COPYING.LESSER](https://github.com/kamping-site/kassert/blob/main/COPYING.LESSER) for details.
+KAssert is released under the MIT License. See [LICENSE](https://github.com/kamping-site/kassert/blob/main/LICENSE) for details.
 
 
   */
