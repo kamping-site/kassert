@@ -52,12 +52,24 @@ option(KASSERT_BUILD_TESTS OFF)
 
 add_subdirectory(extern)
 
+set(CMAKE_DEBUG_TARGET_PROPERTIES
+  KASSERT_ASSERTION_LEVEL
+)
+
 # Dummy target without any compile definitions -- used for unit tests only
-add_library(kassert_base INTERFACE)
-target_include_directories(kassert_base INTERFACE include)
+add_library(kassert INTERFACE)
+target_include_directories(kassert INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+set_target_properties(kassert PROPERTIES
+  COMPATIBLE_INTERFACE_STRING KASSERT_ASSERTION_LEVEL
+  INTERFACE_KASSERT_ASSERTION_LEVEL 15
+)
+  
+
+target_compile_definitions(kassert INTERFACE KASSERT_ASSERTION_LEVEL=$<TARGET_PROPERTY:INTERFACE_KASSERT_ASSERTION_LEVEL>)
 
 # set C++ standard to C++17
-target_compile_features(kassert_base INTERFACE cxx_std_17)
+target_compile_features(kassert INTERFACE cxx_std_17)
 
 list(
     APPEND
@@ -105,10 +117,6 @@ if (KASSERT_WARNINGS_ARE_ERRORS)
     list(APPEND KASSERT_WARNING_FLAGS "-Werror")
 endif ()
 
-# Actual library target with compile definitions
-add_library(kassert INTERFACE)
-target_link_libraries(kassert INTERFACE kassert_base)
-
 if (NOT DEFINED KASSERT_EXCEPTION_MODE OR KASSERT_EXCEPTION_MODE EQUAL 1)
     message(STATUS "Exception mode enabled.")
     target_compile_definitions(kassert INTERFACE -DKASSERT_EXCEPTION_MODE)
@@ -131,4 +139,15 @@ add_library(kassert::kassert ALIAS kassert)
 # Testing and examples are only built if this is the main project or if KASSERT_BUILD_TESTS is set (OFF by default)
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR KASSERT_BUILD_TESTS)
     add_subdirectory(tests)
-endif ()
+  endif ()
+
+include(GNUInstallDirs)
+install(TARGETS kassert EXPORT kassert
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(EXPORT kassert
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/kassert
+  NAMESPACE kassert::
+  FILE kassertConfig.cmake
+)
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
