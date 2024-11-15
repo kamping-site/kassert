@@ -52,6 +52,15 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
     #define KASSERT_ASSERTION_LEVEL KASSERT_ASSERTION_LEVEL_NORMAL
 #endif
 
+namespace kassert {
+template <int active_level>
+struct assertion_level {
+    static constexpr int level = active_level;
+};
+
+struct default_module : assertion_level<KASSERT_ASSERTION_LEVEL> {};
+} // namespace kassert
+
 /// @brief Assertion macro. Accepts between one and three parameters.
 /// @ingroup assertion
 ///
@@ -67,9 +76,10 @@ constexpr int normal = KASSERT_ASSERTION_LEVEL_NORMAL;
 /// `std::cout`.
 /// 3. The level of the assertion (optional, default: `kassert::assert::normal`, see @ref assertion-levels).
 #define KASSERT(...)                     \
-    KASSERT_KASSERT_HPP_VARARG_HELPER_3( \
+    KASSERT_KASSERT_HPP_VARARG_HELPER_4( \
         ,                                \
         __VA_ARGS__,                     \
+        KASSERT_4(__VA_ARGS__),          \
         KASSERT_3(__VA_ARGS__),          \
         KASSERT_2(__VA_ARGS__),          \
         KASSERT_1(__VA_ARGS__),          \
@@ -163,8 +173,9 @@ namespace kassert::internal {
 /// \c KASSERT_ASSERTION_LEVEL.
 /// @param level The level of the assertion.
 /// @return Whether the assertion is enabled.
+template <typename Module = kassert::default_module>
 constexpr bool assertion_enabled(int level) {
-    return level <= KASSERT_ASSERTION_LEVEL;
+    return level <= Module::level;
 }
 
 /// @brief Checks if a assertion of the given level is enabled. This is controlled by the CMake option

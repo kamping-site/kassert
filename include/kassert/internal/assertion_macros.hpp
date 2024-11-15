@@ -54,9 +54,9 @@
 //   dead loop).
 // - `evaluate_and_print_assertion` evaluates the assertion and prints an error message if it failed.
 // - The call to `std::abort()` is not wrapped in a function to keep the stack trace clean.
-#define KASSERT_KASSERT_HPP_KASSERT_IMPL(type, expression, message, level)                           \
+#define KASSERT_KASSERT_HPP_KASSERT_IMPL(type, expression, message, level, module) \
     do {                                                                                             \
-        if constexpr (kassert::internal::assertion_enabled(level)) {                                 \
+      if constexpr (kassert::internal::assertion_enabled<decltype(module)>(level)) { \
             KASSERT_KASSERT_HPP_DIAGNOSTIC_PUSH                                                      \
             KASSERT_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES                                        \
             if (!kassert::internal::evaluate_and_print_assertion(                                    \
@@ -79,11 +79,13 @@
 // expands to IMPL3 with 3 arguments, IMPL2 with 2 arguments and IMPL1 with 1 argument.
 // To do this, the macro always expands to its 5th argument. Depending on the number of parameters, __VA_ARGS__
 // pushes the right implementation to the 5th parameter.
+#define KASSERT_KASSERT_HPP_VARARG_HELPER_4(X, Y, Z, W, V, FUNC, ...) FUNC
 #define KASSERT_KASSERT_HPP_VARARG_HELPER_3(X, Y, Z, W, FUNC, ...) FUNC
 #define KASSERT_KASSERT_HPP_VARARG_HELPER_2(X, Y, Z, FUNC, ...)    FUNC
 
 // KASSERT() chooses the right implementation depending on its number of arguments.
-#define KASSERT_3(expression, message, level) KASSERT_KASSERT_HPP_KASSERT_IMPL("ASSERTION", expression, message, level)
+#define KASSERT_4(expression, message, level, module) KASSERT_KASSERT_HPP_KASSERT_IMPL("ASSERTION", expression, message, level, module)
+#define KASSERT_3(expression, message, level) KASSERT_4(expression, message, level, kassert::default_module{})
 #define KASSERT_2(expression, message)        KASSERT_3(expression, message, kassert::assert::normal)
 #define KASSERT_1(expression)                 KASSERT_2(expression, "")
 

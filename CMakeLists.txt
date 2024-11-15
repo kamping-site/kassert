@@ -38,15 +38,6 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif ()
 endif ()
 
-# Require out-of-source builds
-file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
-if (EXISTS "${LOC_PATH}")
-    message(
-        FATAL_ERROR
-            "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles."
-    )
-endif ()
-
 option(KASSERT_WARNINGS_ARE_ERRORS OFF)
 option(KASSERT_BUILD_TESTS OFF)
 
@@ -126,9 +117,14 @@ else ()
 endif ()
 target_compile_definitions(kassert INTERFACE -DKASSERT_ASSERTION_LEVEL=${KASSERT_ASSERTION_LEVEL})
 
+
 add_library(kassert::kassert ALIAS kassert)
 
 # Testing and examples are only built if this is the main project or if KASSERT_BUILD_TESTS is set (OFF by default)
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR KASSERT_BUILD_TESTS)
+if (PROJECT_IS_TOP_LEVEL OR KASSERT_BUILD_TESTS)
     add_subdirectory(tests)
 endif ()
+if (PROJECT_IS_TOP_LEVEL)
+  INSTALL(TARGETS )
+endif()
+    
