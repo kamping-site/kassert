@@ -54,7 +54,7 @@ add_subdirectory(extern)
 
 # Dummy target without any compile definitions -- used for unit tests only
 add_library(kassert_base INTERFACE)
-target_include_directories(kassert_base INTERFACE include)
+target_include_directories(kassert_base INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
 
 # set C++ standard to C++17
 target_compile_features(kassert_base INTERFACE cxx_std_17)
