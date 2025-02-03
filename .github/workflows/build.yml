@@ -18,7 +18,7 @@ jobs:
       matrix:
         compiler:
           - { name: Clang, cc: clang, cxx: clang++ }
-          - { name: GNU, cc: gcc-10, cxx: g++-10 }
+          - { name: GNU, cc: gcc-14, cxx: g++-14 }
           - { name: Intel, cc: icx, cxx: icpx }
         build-mode: [Debug, Release]
     timeout-minutes: 60
@@ -29,7 +29,7 @@ jobs:
     - name: install-gcc 
       if: matrix.compiler.name == 'GNU'
       run: |
-        sudo apt-get install -y gcc-10
+        sudo apt-get install -y gcc-14
     - name: export-compiler
       run: |
         echo CXX=${{ matrix.compiler.cxx }} >> $GITHUB_ENV
