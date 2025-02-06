@@ -12,50 +12,7 @@ endif ()
 
 # dependencies
 include(FetchContent)
-if (POLICY CMP0135)
-    cmake_policy(SET CMP0135 OLD)
-endif ()
-set(fetch_content_deps googletest)
 
-set(fetch_content_supported_flags "")
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
-    list(APPEND fetch_content_supported_flags OVERRIDE_FIND_PACKAGE)
-endif ()
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.25)
-    list(APPEND fetch_content_supported_flags SYSTEM)
-endif ()
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.28)
-    list(APPEND fetch_content_supported_flags EXCLUDE_FROM_ALL)
-endif ()
-
-# Using CMake >= 3.24 we override find_package and it "just works". For older versions we simulate the same behavior by
-# first making the dependency available and then writing an empty `googletest-config.cmake` such that find_package does
-# not fail.
-#
-# This does not allow for easy overriding of dependencies in top-level projects because then the toplevel also has to
-# override the config file, but this is the price to pay for using old CMake versions.
-#
-# When using CMake >= 3.24 a library user can override the depencies by providing an earlier FetchContent_Declare
-# declaration with the `OVERRIDE_FIND_PACKAGE` flag enabled. Only the first call to FetchContent_Declare for each
-# dependency will be registered.
-
-FetchContent_Declare(
-    googletest URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-                   ${fetch_content_supported_flags}
-)
-
-function (ensure_googletest)
-    if (CMAKE_VERSION VERSION_LESS 3.24)
-        if (NOT googletest_POPULATED)
-            FetchContent_MakeAvailable(googletest)
-            set(googletest_DIR
-                ${CMAKE_BINARY_DIR}/my_pkgRedirects/
-                PARENT_SCOPE
-            )
-            file(WRITE ${CMAKE_BINARY_DIR}/my_pkgRedirects/googletest-config.cmake "")
-        endif ()
-    endif ()
-endfunction ()
 
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -84,15 +41,6 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     else ()
         message(STATUS "Doxygen not found, not building docs")
     endif ()
-endif ()
-
-# Require out-of-source builds
-file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
-if (EXISTS "${LOC_PATH}")
-    message(
-        FATAL_ERROR
-            "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles."
-    )
 endif ()
 
 option(KASSERT_WARNINGS_ARE_ERRORS OFF)
