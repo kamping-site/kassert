@@ -9,19 +9,12 @@ project(
 if (TARGET kassert)
     return()
 endif ()
+option(KASSERT_BUILD_TESTS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
 
 # dependencies
 include(FetchContent)
 
-
-
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    # folder support for IDEs
-    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-    # this has to be enabled in the main CMakeLists file
-    include(CTest)
-
+if (PROJECT_IS_TOP_LEVEL)
     # find Doxygen
     find_package(Doxygen)
     if (DOXYGEN_FOUND)
@@ -43,17 +36,12 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif ()
 endif ()
 
-option(KASSERT_WARNINGS_ARE_ERRORS OFF)
-option(KASSERT_BUILD_TESTS OFF)
-
-add_subdirectory(extern)
-
-# Dummy target without any compile definitions -- used for unit tests only
-add_library(kassert_base INTERFACE)
-target_include_directories(kassert_base INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
+add_library(kassert INTERFACE)
+target_include_directories(kassert INTERFACE include)
 
 # set C++ standard to C++17
-target_compile_features(kassert_base INTERFACE cxx_std_17)
+target_compile_features(kassert INTERFACE cxx_std_17)
+
 add_library(kassert_warnings INTERFACE)
 target_compile_options(
     kassert_warnings
@@ -89,36 +77,24 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     )
 endif ()
 
-# OFF by default.
-if (KASSERT_WARNINGS_ARE_ERRORS)
-    target_compile_options(kassert_warnings INTERFACE "-Werror")
-endif ()
-
-# Actual library target with compile definitions
-add_library(kassert INTERFACE)
-target_link_libraries(kassert INTERFACE kassert_base)
-
-if (NOT DEFINED KASSERT_EXCEPTION_MODE OR KASSERT_EXCEPTION_MODE EQUAL 1)
-    message(STATUS "Exception mode enabled.")
-    target_compile_definitions(kassert INTERFACE -DKASSERT_EXCEPTION_MODE)
-else ()
-    message(STATUS "Exception mode disabled.")
-endif ()
+# THROWING_KASSERT is able to throw an exception if an assertion fails. If KASSERT_EXCEPTION_MODE is defined, than an
+# exception will be thrown upon failure, otherwise it behaves like regular KASSERT. You can either manually #define it,
+# or by setting the KASSERT_EXCEPTION_MODE target property to ON on the target which links to kassert.
+set(exception_mode_enabled "$<BOOL:$<TARGET_PROPERTY:KASSERT_EXCEPTION_MODE>>")
+target_compile_definitions(kassert INTERFACE "$<${exception_mode_enabled}:-DKASSERT_EXCEPTION_MODE>")
 
 # The assertion level controls which assertions are enabled during runtime. Assertion levels can be set explicitly using
-# the -DKASSERT_ASSERTION_LEVEL=... flag.
-if (NOT DEFINED KASSERT_ASSERTION_LEVEL)
-    message(WARNING "Assertion level no set. Default to level 0.")
-    set(KASSERT_ASSERTION_LEVEL 0)
-else ()
-    message(STATUS "Assertion level set to ${KASSERT_ASSERTION_LEVEL}.")
-endif ()
-target_compile_definitions(kassert INTERFACE -DKASSERT_ASSERTION_LEVEL=${KASSERT_ASSERTION_LEVEL})
+# the -DKASSERT_ASSERTION_LEVEL=... flag. You can also set the KASSERT_ASSERTION_LEVEL target property to the desired
+# level on the target which links to kassert. This will properly #define the assertion level for the target.
+set(assertion_level_set "$<BOOL:$<TARGET_PROPERTY:KASSERT_ASSERTION_LEVEL>>")
+set(assertion_level "$<TARGET_PROPERTY:KASSERT_ASSERTION_LEVEL>")
+target_compile_definitions(kassert INTERFACE "$<${assertion_level_set}:-DKASSERT_ASSERTION_LEVEL=${assertion_level}>")
 
 add_library(kassert::kassert ALIAS kassert)
 
 # Testing and examples are only built if this is the main project or if KASSERT_BUILD_TESTS is set (OFF by default)
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR KASSERT_BUILD_TESTS)
-    ensure_googletest()
+if (KASSERT_BUILD_TESTS)
+    # this has to be enabled in the main CMakeLists file
+    include(CTest)
     add_subdirectory(tests)
 endif ()
