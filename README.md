@@ -32,8 +32,9 @@ KASSERT(a + a == b, "Under the assumption that a is " << a << ", the world is a 
 ```
 
 Use `THROWING_KASSERT` to throw an exception if the assertion fails.
-This requires the CMake option `KASSERT_EXCEPTION_MODE` to be set.
-If exception mode is not enabled, `THROWING_KASSERT` acts the same as `KASSERT`.
+This requires the target property `KASSERT_EXCEPTION_MODE` to be set
+to `ON` on the target linking against `kassert`.  If exception mode is
+not enabled, `THROWING_KASSERT` acts the same as `KASSERT`.
 
 ```c++
 THROWING_KASSERT(1 + 1 == 3, "The world is a lie!");
@@ -53,8 +54,14 @@ argument, followed by the remaining arguments `[, ...]` passed to `THROWING_KASS
 
 Assertions are enabled if their assertion level (optional third parameter of `KASSERT`) is **less than or equal to** the active assertion level.
 The default level is `kassert::assert::normal` (30).
-Set the CMake variable `KASSERT_ASSERTION_LEVEL` to the numeric value of the desired assertion level.
+Set the CMake target property `KASSERT_ASSERTION_LEVEL` on you target linking against `kassert` to the numeric value of the desired assertion level.
 If omitted, the assertion level is set to `0`, which disables all assertions.
+
+```cmake
+add_library(my_code ...)
+target_link_libraries(my_code PRIVATE kassert::kassert)
+set_target_properties(my_code PROPERTIES KASSERT_ASSERTION_LEVEL 10)
+```
 
 ### Custom Assertion Levels
 
