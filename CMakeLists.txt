@@ -6,9 +6,17 @@ project(
     VERSION 0.2.0
 )
 
+
 # include guard to prevent duplicate targets when including this project as a subdirectory
 if (TARGET kassert)
     return()
+endif()
+if (CMAKE_VERSION VERSION_LESS 3.21)
+    if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+        set(PROJECT_IS_TOP_LEVEL TRUE)
+    else ()
+        set(PROJECT_IS_TOP_LEVEL FALSE)
+    endif ()
 endif ()
 option(KASSERT_BUILD_TESTS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
 
