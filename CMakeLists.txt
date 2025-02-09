@@ -19,27 +19,10 @@ if (CMAKE_VERSION VERSION_LESS 3.21)
     endif ()
 endif ()
 option(KASSERT_BUILD_TESTS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
+option(KASSERT_BUILD_DOCS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
 
-if (PROJECT_IS_TOP_LEVEL)
-    # find Doxygen
-    find_package(Doxygen)
-    if (DOXYGEN_FOUND)
-        if (DOXYGEN_VERSION VERSION_LESS "1.9.2")
-            message(
-                WARNING
-                    "Doxygen must be version 1.9.2 or newer. Documentation may not be displayed correctly and CI may not pass even if checks pass locally."
-            )
-        endif ()
-        add_custom_target(
-            docs
-            COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/Doxyfile
-            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-            COMMENT "Generating Documentation"
-            VERBATIM
-        )
-    else ()
-        message(STATUS "Doxygen not found, not building docs")
-    endif ()
+if (KASSERT_BUILD_DOCS)
+  add_subdirectory(docs)
 endif ()
 
 add_library(kassert INTERFACE)
