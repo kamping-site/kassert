@@ -10,11 +10,15 @@ jobs:
   doxygen-check:
     name: Doxygen Check
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    container:
+      image: "ghcr.io/kamping-site/kamping-ci:2024.2"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.0.2
         with:
           submodules: 'recursive'
-      - uses: mattnotmitt/doxygen-action@v1.9.4
-        with:
-          doxyfile-path: 'docs/Doxyfile'
+      - name: version
+        run: doxygen --version
+      - name: cmake
+        run: cmake -B build
+      - name: run-doxygen
+        run: cmake --build build/ --target docs          
