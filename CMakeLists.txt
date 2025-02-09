@@ -9,8 +9,8 @@ project(
 # include guard to prevent duplicate targets when including this project as a subdirectory
 if (TARGET kassert::kassert)
     return()
-endif()
-  
+endif ()
+
 if (CMAKE_VERSION VERSION_LESS 3.21)
     if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         set(PROJECT_IS_TOP_LEVEL TRUE)
