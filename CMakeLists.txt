@@ -1,22 +1,26 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.14)
 project(
     kassert
     DESCRIPTION "Assertion library for KaMPIng"
     LANGUAGES CXX
+    VERSION 0.2.0
 )
 
 # include guard to prevent duplicate targets when including this project as a subdirectory
-if (TARGET kassert)
+if (TARGET kassert::kassert)
     return()
 endif ()
 
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    # folder support for IDEs
-    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+if (CMAKE_VERSION VERSION_LESS 3.21)
+    if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+        set(PROJECT_IS_TOP_LEVEL TRUE)
+    else ()
+        set(PROJECT_IS_TOP_LEVEL FALSE)
+    endif ()
+endif ()
+option(KASSERT_BUILD_TESTS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
 
-    # this has to be enabled in the main CMakeLists file
-    include(CTest)
-
+if (PROJECT_IS_TOP_LEVEL)
     # find Doxygen
     find_package(Doxygen)
     if (DOXYGEN_FOUND)
@@ -38,97 +42,98 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif ()
 endif ()
 
-# Require out-of-source builds
-file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
-if (EXISTS "${LOC_PATH}")
-    message(
-        FATAL_ERROR
-            "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles."
-    )
-endif ()
-
-option(KASSERT_WARNINGS_ARE_ERRORS OFF)
-option(KASSERT_BUILD_TESTS OFF)
-
-add_subdirectory(extern)
-
-# Dummy target without any compile definitions -- used for unit tests only
-add_library(kassert_base INTERFACE)
-target_include_directories(kassert_base INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
+add_library(kassert INTERFACE)
+target_include_directories(kassert INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 # set C++ standard to C++17
-target_compile_features(kassert_base INTERFACE cxx_std_17)
+target_compile_features(kassert INTERFACE cxx_std_17)
 
-list(
-    APPEND
-    KASSERT_WARNING_FLAGS
-    "-Wall"
-    "-Wextra"
-    "-Wconversion"
-    "-Wnon-virtual-dtor"
-    "-Woverloaded-virtual"
-    "-Wshadow"
-    "-Wsign-conversion"
-    "-Wundef"
-    "-Wunreachable-code"
-    "-Wunused"
+add_library(kassert_warnings INTERFACE)
+target_compile_options(
+    kassert_warnings
+    INTERFACE "-Wall"
+              "-Wextra"
+              "-Wconversion"
+              "-Wnon-virtual-dtor"
+              "-Woverloaded-virtual"
+              "-Wshadow"
+              "-Wsign-conversion"
+              "-Wundef"
+              "-Wunreachable-code"
+              "-Wunused"
 )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    list(
-        APPEND
-        KASSERT_WARNING_FLAGS
-        "-Wcast-align"
-        "-Wnull-dereference"
-        "-Wpedantic"
-        "-Wextra-semi"
-        "-Wno-gnu-zero-variadic-macro-arguments"
+    target_compile_options(
+        kassert_warnings INTERFACE "-Wcast-align" "-Wnull-dereference" "-Wpedantic" "-Wextra-semi"
+                                   "-Wno-gnu-zero-variadic-macro-arguments"
     )
 endif ()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    list(
-        APPEND
-        KASSERT_WARNING_FLAGS
-        "-Wcast-align"
-        "-Wnull-dereference"
-        "-Wpedantic"
-        "-Wnoexcept"
-        "-Wsuggest-attribute=const"
-        "-Wsuggest-attribute=noreturn"
-        "-Wsuggest-override"
+    target_compile_options(
+        kassert_warnings
+        INTERFACE "-Wcast-align"
+                  "-Wnull-dereference"
+                  "-Wpedantic"
+                  "-Wnoexcept"
+                  "-Wsuggest-attribute=const"
+                  "-Wsuggest-attribute=noreturn"
+                  "-Wsuggest-override"
     )
 endif ()
 
-# OFF by default.
-if (KASSERT_WARNINGS_ARE_ERRORS)
-    list(APPEND KASSERT_WARNING_FLAGS "-Werror")
-endif ()
-
-# Actual library target with compile definitions
-add_library(kassert INTERFACE)
-target_link_libraries(kassert INTERFACE kassert_base)
-
-if (NOT DEFINED KASSERT_EXCEPTION_MODE OR KASSERT_EXCEPTION_MODE EQUAL 1)
-    message(STATUS "Exception mode enabled.")
-    target_compile_definitions(kassert INTERFACE -DKASSERT_EXCEPTION_MODE)
-else ()
-    message(STATUS "Exception mode disabled.")
-endif ()
+# THROWING_KASSERT is able to throw an exception if an assertion fails. If KASSERT_EXCEPTION_MODE is defined, than an
+# exception will be thrown upon failure, otherwise it behaves like regular KASSERT. You can either manually #define it,
+# or by setting the KASSERT_EXCEPTION_MODE target property to ON on the target which links to kassert.
+set(exception_mode_enabled "$<BOOL:$<TARGET_PROPERTY:KASSERT_EXCEPTION_MODE>>")
+target_compile_definitions(kassert INTERFACE "$<${exception_mode_enabled}:-DKASSERT_EXCEPTION_MODE>")
 
 # The assertion level controls which assertions are enabled during runtime. Assertion levels can be set explicitly using
-# the -DKASSERT_ASSERTION_LEVEL=... flag.
-if (NOT DEFINED KASSERT_ASSERTION_LEVEL)
-    message(WARNING "Assertion level no set. Default to level 0.")
-    set(KASSERT_ASSERTION_LEVEL 0)
-else ()
-    message(STATUS "Assertion level set to ${KASSERT_ASSERTION_LEVEL}.")
-endif ()
-target_compile_definitions(kassert INTERFACE -DKASSERT_ASSERTION_LEVEL=${KASSERT_ASSERTION_LEVEL})
+# the -DKASSERT_ASSERTION_LEVEL=... flag. You can also set the KASSERT_ASSERTION_LEVEL target property to the desired
+# level on the target which links to kassert. This will properly #define the assertion level for the target.
+set(assertion_level_set "$<BOOL:$<TARGET_PROPERTY:KASSERT_ASSERTION_LEVEL>>")
+set(assertion_level "$<TARGET_PROPERTY:KASSERT_ASSERTION_LEVEL>")
+target_compile_definitions(kassert INTERFACE "$<${assertion_level_set}:-DKASSERT_ASSERTION_LEVEL=${assertion_level}>")
 
 add_library(kassert::kassert ALIAS kassert)
 
-# Testing and examples are only built if this is the main project or if KASSERT_BUILD_TESTS is set (OFF by default)
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR KASSERT_BUILD_TESTS)
+# Tests are only built if KASSERT_BUILD_TESTS is set (OFF by default, ON if this is the top-level project)
+if (KASSERT_BUILD_TESTS)
+    # this has to be enabled in the main CMakeLists file
+    include(CTest)
     add_subdirectory(tests)
 endif ()
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/kassertConfigVersion.cmake
+    VERSION ${kassert_PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion ARCH_INDEPENDENT # requires CMake 3.14
+)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/kassertConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/kassertConfig.cmake COPYONLY
+)
+
+include(GNUInstallDirs)
+install(
+    TARGETS kassert
+    EXPORT kassertTargets
+    INCLUDES
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(
+    DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILES_MATCHING
+    PATTERN "*.hpp"
+)
+install(
+    EXPORT kassertTargets
+    FILE kassertTargets.cmake
+    NAMESPACE kassert::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/kassert
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kassertConfigVersion.cmake ${CMAKE_CURRENT_BINARY_DIR}/kassertConfig.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/kassert
+)
