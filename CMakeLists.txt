@@ -19,7 +19,7 @@ if (CMAKE_VERSION VERSION_LESS 3.21)
     endif ()
 endif ()
 option(KASSERT_BUILD_TESTS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
-option(KASSERT_BUILD_DOCS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
+option(KASSERT_BUILD_DOCS "Build the docs." ${PROJECT_IS_TOP_LEVEL})
 
 if (KASSERT_BUILD_DOCS)
     add_subdirectory(docs)
