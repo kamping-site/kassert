@@ -54,6 +54,9 @@ if (DOXYGEN_FOUND)
         COMMENT "Generating Documentation"
         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
     )
+    include(GNUInstallDirs)
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ TYPE DOC)
+
 else ()
     message(STATUS "Doxygen not found, not building docs")
 endif ()
