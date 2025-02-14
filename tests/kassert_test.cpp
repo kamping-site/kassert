@@ -10,6 +10,8 @@
 #define ASSERTION_LEVEL_LOWER_THAN_NORMAL  -10000
 #define ASSERTION_LEVEL_HIGHER_THAN_NORMAL 10000
 
+#include <csignal>
+
 #include <gmock/gmock.h>
 
 #include "kassert/kassert.hpp"
