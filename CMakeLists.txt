@@ -20,6 +20,7 @@ if (CMAKE_VERSION VERSION_LESS 3.21)
 endif ()
 option(KASSERT_BUILD_TESTS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
 option(KASSERT_BUILD_DOCS "Build the docs." ${PROJECT_IS_TOP_LEVEL})
+option(KASSERT_USE_BUNDLED_GTEST "Use bundled googletest (downloaded at configure time via FetchContent)." ON)
 
 if (KASSERT_BUILD_DOCS)
     add_subdirectory(docs)
