@@ -13,7 +13,7 @@ jobs:
       matrix:
         compiler:
           - { name: Clang, cc: clang, cxx: clang++ }
-          - { name: GNU, cc: gcc-10, cxx: g++-10 }
+          - { name: GNU, cc: gcc-14, cxx: g++-14 }
           - { name: Intel, cc: icx, cxx: icpx }
         build-mode: [Debug, Release]
     steps:
