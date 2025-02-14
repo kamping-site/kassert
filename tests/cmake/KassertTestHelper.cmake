@@ -6,7 +6,14 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/google/googletest
     GIT_TAG v1.15.2
 )
-FetchContent_MakeAvailable(googletest)
+if (KASSERT_USE_BUNDLED_GTEST)
+    FetchContent_MakeAvailable(googletest)
+else ()
+    find_package(GTest REQUIRED)
+    if (NOT TARGET GTest::gmock)
+        message(FATAL_ERROR "Found gtest, but could not find gmock.")
+    endif ()
+endif ()
 
 include(GoogleTest)
 
@@ -17,7 +24,7 @@ include(GoogleTest)
 function (kassert_register_test KASSERT_TARGET_NAME)
     cmake_parse_arguments("KASSERT" "EXCEPTION_MODE" "" "FILES" ${ARGN})
     add_executable(${KASSERT_TARGET_NAME} ${KASSERT_FILES})
-    target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE gtest gtest_main gmock kassert)
+    target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE GTest::gtest GTest::gtest_main GTest::gmock kassert)
     target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE kassert_warnings)
     gtest_discover_tests(${KASSERT_TARGET_NAME})
 
@@ -52,7 +59,7 @@ function (kassert_register_compilation_failure_test)
 
         # Add the executable and link the libraries.
         add_executable(${THIS_TARGETS_NAME} ${KATESTROPHE_FILES})
-        target_link_libraries(${THIS_TARGETS_NAME} PUBLIC gtest ${KATESTROPHE_LIBRARIES})
+        target_link_libraries(${THIS_TARGETS_NAME} PUBLIC GTest::gtest ${KATESTROPHE_LIBRARIES})
 
         # Select the correct section of the target by setting the appropriate preprocessor define.
         target_compile_definitions(${THIS_TARGETS_NAME} PRIVATE ${SECTION})
