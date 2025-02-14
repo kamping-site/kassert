@@ -2,9 +2,9 @@
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
-    if (DOXYGEN_VERSION VERSION_LESS "1.10.0")
+    if (DOXYGEN_VERSION VERSION_LESS "1.9.0")
         message(
-            WARNING "Doxygen must be version 1.10.0 or newer. Documentation may not be displayed correctly and CI may "
+            WARNING "Doxygen must be version 1.9.0 or newer. Documentation may not be displayed correctly and CI may "
                     "not pass even if checks pass locally."
         )
     endif ()
