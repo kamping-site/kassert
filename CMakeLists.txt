@@ -3,7 +3,7 @@ project(
     kassert
     DESCRIPTION "Assertion library for KaMPIng"
     LANGUAGES CXX
-    VERSION 0.2.0
+    VERSION 0.2.2
 )
 
 # include guard to prevent duplicate targets when including this project as a subdirectory
