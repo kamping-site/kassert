@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,49,124,74"/>
+<area shape="rect" id="Node000001" href="$structkassert_1_1internal_1_1AlwaysFalse.html" title="Type trait that is always false, to implement static_asserts that always fail, thus preventing a temp..." alt="" coords="235,5,375,45"/>
+<area shape="poly" id="edge4_Node000000_Node000001" title=" " alt="" coords="137,48,235,33,235,38,138,53"/>
+<area shape="rect" id="Node000002" href="$structkassert_1_1internal_1_1is__streamable__type__impl.html" title=" " alt="" coords="172,70,439,125"/>
+<area shape="poly" id="edge5_Node000000_Node000002" title=" " alt="" coords="138,70,172,75,171,80,137,75"/>
+</map>

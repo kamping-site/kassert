@@ -1,0 +1,28 @@
+<map id="include/kassert/kassert.hpp" name="include/kassert/kassert.hpp">
+<area shape="rect" id="Node000001" title="Macros for asserting runtime checks." alt="" coords="350,5,549,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,86,85,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="355,33,232,53,98,81,88,84,86,79,97,76,231,47,354,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="110,86,207,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="407,33,227,81,214,85,212,80,226,76,406,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="199,240,291,265"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="354,33,309,51,288,64,271,80,252,115,243,155,241,194,244,226,239,227,236,194,238,154,247,113,267,77,285,60,306,46,352,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="515,240,575,265"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="467,29,492,50,516,77,534,115,544,156,549,226,544,226,538,157,528,117,511,80,488,53,464,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="599,240,662,265"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="475,28,510,49,543,77,572,114,595,155,625,226,620,228,590,157,567,117,539,81,507,53,473,33"/>
+<area shape="rect" id="Node000007" href="$assertion__macros_8hpp.html" title="Provides macros to implement the KASSERT, THROWING_KASSERT and THROWING_KASSERT_SPECIFIED macros." alt="" coords="656,79,843,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="494,28,665,73,663,78,492,33"/>
+<area shape="rect" id="Node000008" href="$expression__decomposition_8hpp.html" title="Expression decomposition." alt="" coords="282,79,481,119"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="441,33,409,70,405,66,437,29"/>
+<area shape="rect" id="Node000009" href="$logger_8hpp.html" title="Logger utility class to build error messages for failed assertins." alt="" coords="336,167,531,192"/>
+<area shape="poly" id="edge15_Node000001_Node000009" title=" " alt="" coords="463,29,480,50,495,78,499,99,494,120,481,142,463,160,459,156,476,139,490,118,494,99,489,80,476,53,459,32"/>
+<area shape="poly" id="edge8_Node000008_Node000004" title=" " alt="" coords="366,121,267,231,263,228,362,117"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="396,117,420,153,416,156,392,120"/>
+<area shape="poly" id="edge12_Node000009_Node000004" title=" " alt="" coords="404,195,290,237,288,232,402,190"/>
+<area shape="poly" id="edge13_Node000009_Node000005" title=" " alt="" coords="453,190,517,230,514,235,450,194"/>
+<area shape="poly" id="edge14_Node000009_Node000006" title=" " alt="" coords="466,190,587,233,585,238,464,195"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="415,240,491,265"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="439,192,449,226,444,228,434,193"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="316,240,391,265"/>
+<area shape="poly" id="edge11_Node000009_Node000011" title=" " alt="" coords="422,194,378,233,375,229,419,190"/>
+</map>

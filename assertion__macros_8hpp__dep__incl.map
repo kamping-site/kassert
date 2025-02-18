@@ -1,0 +1,5 @@
+<map id="include/kassert/internal/assertion_macros.hpp" name="include/kassert/internal/assertion_macros.hpp">
+<area shape="rect" id="Node000001" title="Provides macros to implement the KASSERT, THROWING_KASSERT and THROWING_KASSERT_SPECIFIED macros." alt="" coords="17,5,192,45"/>
+<area shape="rect" id="Node000002" href="$kassert_8hpp.html" title="Macros for asserting runtime checks." alt="" coords="5,93,204,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,59,107,93,102,93,102,59"/>
+</map>
