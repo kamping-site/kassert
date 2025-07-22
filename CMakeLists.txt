@@ -32,9 +32,12 @@ set(KASSERT_NAMESPACE "kassert")
 configure_file(include/kassert/kassert.hpp.in include/kassert/kassert.hpp)
 configure_file(include/kassert/internal/logger.hpp include/kassert/internal/logger.hpp)
 configure_file(include/kassert/internal/assertion_macros.hpp include/kassert/internal/assertion_macros.hpp)
-configure_file(include/kassert/internal/expression_decomposition.hpp include/kassert/internal/expression_decomposition.hpp)
-# target_include_directories(kassert INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-target_include_directories(${KASSERT_TARGET_PREFIX}_kassert INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>)
+configure_file(
+    include/kassert/internal/expression_decomposition.hpp include/kassert/internal/expression_decomposition.hpp
+)
+target_include_directories(
+    ${KASSERT_TARGET_PREFIX}_kassert INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+)
 
 # set C++ standard to C++17
 target_compile_features(${KASSERT_TARGET_PREFIX}_kassert INTERFACE cxx_std_17)
@@ -56,8 +59,8 @@ target_compile_options(
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     target_compile_options(
-        ${KASSER_TARGET_PREFIX}_kassert_warnings INTERFACE "-Wcast-align" "-Wnull-dereference" "-Wpedantic" "-Wextra-semi"
-                                   "-Wno-gnu-zero-variadic-macro-arguments"
+        ${KASSER_TARGET_PREFIX}_kassert_warnings INTERFACE "-Wcast-align" "-Wnull-dereference" "-Wpedantic"
+                                                           "-Wextra-semi" "-Wno-gnu-zero-variadic-macro-arguments"
     )
 endif ()
 
@@ -78,14 +81,18 @@ endif ()
 # exception will be thrown upon failure, otherwise it behaves like regular KASSERT. You can either manually #define it,
 # or by setting the KASSERT_EXCEPTION_MODE target property to ON on the target which links to kassert.
 set(exception_mode_enabled "$<BOOL:$<TARGET_PROPERTY:KASSERT_EXCEPTION_MODE>>")
-target_compile_definitions(${KASSERT_TARGET_PREFIX}_kassert INTERFACE "$<${exception_mode_enabled}:-DKASSERT_EXCEPTION_MODE>")
+target_compile_definitions(
+    ${KASSERT_TARGET_PREFIX}_kassert INTERFACE "$<${exception_mode_enabled}:-DKASSERT_EXCEPTION_MODE>"
+)
 
 # The assertion level controls which assertions are enabled during runtime. Assertion levels can be set explicitly using
 # the -DKASSERT_ASSERTION_LEVEL=... flag. You can also set the KASSERT_ASSERTION_LEVEL target property to the desired
 # level on the target which links to kassert. This will properly #define the assertion level for the target.
 set(assertion_level_set "$<BOOL:$<TARGET_PROPERTY:KASSERT_ASSERTION_LEVEL>>")
 set(assertion_level "$<TARGET_PROPERTY:KASSERT_ASSERTION_LEVEL>")
-target_compile_definitions(${KASSERT_TARGET_PREFIX}_kassert INTERFACE "$<${assertion_level_set}:-DKASSERT_ASSERTION_LEVEL=${assertion_level}>")
+target_compile_definitions(
+    ${KASSERT_TARGET_PREFIX}_kassert INTERFACE "$<${assertion_level_set}:-DKASSERT_ASSERTION_LEVEL=${assertion_level}>"
+)
 
 add_library(${KASSERT_TARGET_PREFIX}::kassert ALIAS ${KASSERT_TARGET_PREFIX}_kassert)
 
