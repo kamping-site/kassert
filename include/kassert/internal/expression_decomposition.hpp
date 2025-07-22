@@ -42,9 +42,9 @@
 
 #include <type_traits>
 
-#include "kassert/internal/logger.hpp"
+#include "./logger.hpp"
 
-namespace kassert::internal {
+namespace @KASSERT_NAMESPACE@::internal {
 /// @brief Type trait that is always false, to implement static_asserts that always fail, thus preventing a
 /// template function from being instanciated. Used to forbid calling the overloads of && and ||.
 /// @tparam T Some template parameter of the template that should never be instantiated.

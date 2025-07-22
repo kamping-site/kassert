@@ -13,7 +13,7 @@
 #include <utility>
 #include <vector>
 
-namespace kassert::internal {
+namespace @KASSERT_NAMESPACE@::internal {
 // If partially specialized template is not applicable, set value to false.
 template <typename, typename, typename = void>
 struct is_streamable_type_impl : std::false_type {};
@@ -33,7 +33,7 @@ template <typename StreamT, typename ValueT>
 constexpr bool is_streamable_type = is_streamable_type_impl<StreamT, ValueT>::value;
 } // namespace kassert::internal
 
-namespace kassert {
+namespace @KASSERT_NAMESPACE@ {
 /// @brief Simple wrapper for output streams that is used to stringify values in assertions and exceptions.
 ///
 /// To enable stringification for custom types, overload the \c << operator of this class.
@@ -89,7 +89,7 @@ private:
 };
 } // namespace kassert
 
-namespace kassert::internal {
+namespace @KASSERT_NAMESPACE@::internal {
 /// @addtogroup expression-expansion
 /// @{
 
@@ -119,7 +119,7 @@ using RrefOStringstreamLogger = Logger<std::ostringstream&&>;
 /// @}
 } // namespace kassert::internal
 
-namespace kassert {
+namespace @KASSERT_NAMESPACE@ {
 
 /// @brief Stringification of `std::vector<T>` in assertions.
 ///

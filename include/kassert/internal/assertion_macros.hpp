@@ -23,17 +23,17 @@
 //
 // This is a known limitation of the current implementation.
 #if defined(__GNUC__) && !defined(__clang__) // GCC
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_PUSH               _Pragma("GCC diagnostic push")
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_POP                _Pragma("GCC diagnostic pop")
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES _Pragma("GCC diagnostic ignored \"-Wparentheses\"")
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_PUSH               _Pragma("GCC diagnostic push")
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_POP                _Pragma("GCC diagnostic pop")
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES _Pragma("GCC diagnostic ignored \"-Wparentheses\"")
 #elif defined(__clang__) // Clang
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_PUSH               _Pragma("clang diagnostic push")
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_POP                _Pragma("clang diagnostic pop")
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES _Pragma("clang diagnostic ignored \"-Wparentheses\"")
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_PUSH               _Pragma("clang diagnostic push")
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_POP                _Pragma("clang diagnostic pop")
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES _Pragma("clang diagnostic ignored \"-Wparentheses\"")
 #else // Other compilers -> no supression supported
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_PUSH
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_POP
-    #define KASSERT_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_PUSH
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_POP
+    #define @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES
 #endif
 
 // This is the actual implementation of the KASSERT() macro.
@@ -45,21 +45,21 @@
 //   dead loop).
 // - `evaluate_and_print_assertion` evaluates the assertion and prints an error message if it failed.
 // - The call to `std::abort()` is not wrapped in a function to keep the stack trace clean.
-#define KASSERT_KASSERT_HPP_KASSERT_IMPL(type, expression, message, level)                           \
+#define @KASSERT_PREFIX@_KASSERT_HPP_KASSERT_IMPL(type, expression, message, level)                           \
     do {                                                                                             \
-        if constexpr (kassert::internal::assertion_enabled(level)) {                                 \
-            KASSERT_KASSERT_HPP_DIAGNOSTIC_PUSH                                                      \
-            KASSERT_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES                                        \
-            if (!kassert::internal::evaluate_and_print_assertion(                                    \
+        if constexpr (@KASSERT_NAMESPACE@::internal::assertion_enabled(level)) {                                 \
+            @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_PUSH                                                      \
+            @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES                                        \
+            if (!@KASSERT_NAMESPACE@::internal::evaluate_and_print_assertion(                                    \
                     type,                                                                            \
-                    kassert::internal::finalize_expr(kassert::internal::Decomposer{} <= expression), \
-                    KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                             \
+                    @KASSERT_NAMESPACE@::internal::finalize_expr(@KASSERT_NAMESPACE@::internal::Decomposer{} <= expression), \
+                    @KASSERT_PREFIX@_KASSERT_HPP_SOURCE_LOCATION,                                             \
                     #expression                                                                      \
                 )) {                                                                                 \
-                kassert::Logger<std::ostream&>(std::cerr) << message << "\n";                        \
+                @KASSERT_NAMESPACE@::Logger<std::ostream&>(std::cerr) << message << "\n";                        \
                 std::abort();                                                                        \
             }                                                                                        \
-            KASSERT_KASSERT_HPP_DIAGNOSTIC_POP                                                       \
+            @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_POP                                                       \
         }                                                                                            \
     } while (false)
 
@@ -70,30 +70,30 @@
 // expands to IMPL3 with 3 arguments, IMPL2 with 2 arguments and IMPL1 with 1 argument.
 // To do this, the macro always expands to its 5th argument. Depending on the number of parameters, __VA_ARGS__
 // pushes the right implementation to the 5th parameter.
-#define KASSERT_KASSERT_HPP_VARARG_HELPER_3(X, Y, Z, W, FUNC, ...) FUNC
-#define KASSERT_KASSERT_HPP_VARARG_HELPER_2(X, Y, Z, FUNC, ...)    FUNC
+#define @KASSERT_PREFIX@_KASSERT_HPP_VARARG_HELPER_3(X, Y, Z, W, FUNC, ...) FUNC
+#define @KASSERT_PREFIX@_KASSERT_HPP_VARARG_HELPER_2(X, Y, Z, FUNC, ...)    FUNC
 
 // KASSERT() chooses the right implementation depending on its number of arguments.
-#define KASSERT_3(expression, message, level) KASSERT_KASSERT_HPP_KASSERT_IMPL("ASSERTION", expression, message, level)
-#define KASSERT_2(expression, message)        KASSERT_3(expression, message, kassert::assert::normal)
-#define KASSERT_1(expression)                 KASSERT_2(expression, "")
+#define @KASSERT_PREFIX@_3(expression, message, level) @KASSERT_PREFIX@_KASSERT_HPP_KASSERT_IMPL("ASSERTION", expression, message, level)
+#define @KASSERT_PREFIX@_2(expression, message)        @KASSERT_PREFIX@_3(expression, message, @KASSERT_NAMESPACE@::assert::normal)
+#define @KASSERT_PREFIX@_1(expression)                 @KASSERT_PREFIX@_2(expression, "")
 
 // Implementation of the THROWING_KASSERT() macro.
 // In KASSERT_EXCEPTION_MODE, we throw an exception similar to the implementation of KASSERT(), although expression
 // decomposition in exceptions is currently unsupported. Otherwise, the macro delegates to KASSERT().
-#ifdef KASSERT_EXCEPTION_MODE
-    #define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(expression, exception_type, message, ...) \
+#ifdef @KASSERT_PREFIX@_EXCEPTION_MODE
+    #define @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(expression, exception_type, message, ...) \
         do {                                                                                             \
             if (!(expression)) {                                                                         \
                 throw exception_type(message, ##__VA_ARGS__);                                            \
             }                                                                                            \
         } while (false)
 #else
-    #define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(expression, exception_type, message, ...) \
+    #define @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(expression, exception_type, message, ...) \
         do {                                                                                             \
-            if constexpr (kassert::internal::assertion_enabled(kassert::assert::kthrow)) {               \
+            if constexpr (@KASSERT_NAMESPACE@::internal::assertion_enabled(@KASSERT_NAMESPACE@::assert::kthrow)) {               \
                 if (!(expression)) {                                                                     \
-                    kassert::Logger<std::ostream&>(std::cerr)                                            \
+                    @KASSERT_NAMESPACE@::Logger<std::ostream&>(std::cerr)                                            \
                         << (exception_type(message, ##__VA_ARGS__).what()) << "\n";                      \
                     std::abort();                                                                        \
                 }                                                                                        \
@@ -101,44 +101,44 @@
         } while (false)
 #endif
 
-#define KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message)                                   \
-    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                  \
+#define @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message)                                   \
+    @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                  \
         expression,                                                                                      \
-        kassert::KassertException,                                                                       \
-        kassert::internal::build_what(                                                                   \
+        @KASSERT_NAMESPACE@::KassertException,                                                                       \
+        @KASSERT_NAMESPACE@::internal::build_what(                                                                   \
             #expression,                                                                                 \
-            KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                                         \
-            (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
+            @KASSERT_PREFIX@_KASSERT_HPP_SOURCE_LOCATION,                                                         \
+            (@KASSERT_NAMESPACE@::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
         )                                                                                                \
     )
 
-#define KASSERT_KASSERT_HPP_THROWING_KASSERT_CUSTOM_IMPL(expression, exception_type, message, ...)       \
-    KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                  \
+#define @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_CUSTOM_IMPL(expression, exception_type, message, ...)       \
+    @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                  \
         expression,                                                                                      \
         exception_type,                                                                                  \
-        kassert::internal::build_what(                                                                   \
+        @KASSERT_NAMESPACE@::internal::build_what(                                                                   \
             #expression,                                                                                 \
-            KASSERT_KASSERT_HPP_SOURCE_LOCATION,                                                         \
-            (kassert::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
+            @KASSERT_PREFIX@_KASSERT_HPP_SOURCE_LOCATION,                                                         \
+            (@KASSERT_NAMESPACE@::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
         ),                                                                                               \
         ##__VA_ARGS__                                                                                    \
     )
 
 // THROWING_KASSERT() chooses the right implementation depending on its number of arguments.
-#define THROWING_KASSERT_2(expression, message) KASSERT_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message)
-#define THROWING_KASSERT_1(expression)          THROWING_KASSERT_2(expression, "")
+#define THROWING_@KASSERT_PREFIX@_2(expression, message) @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message)
+#define THROWING_@KASSERT_PREFIX@_1(expression)          THROWING_@KASSERT_PREFIX@_2(expression, "")
 
 // __PRETTY_FUNCTION__ is a compiler extension supported by GCC and clang that prints more information than __func__
 #if defined(__GNUC__) || defined(__clang__)
-    #define KASSERT_KASSERT_HPP_FUNCTION_NAME __PRETTY_FUNCTION__
+    #define @KASSERT_PREFIX@_KASSERT_HPP_FUNCTION_NAME __PRETTY_FUNCTION__
 #else
-    #define KASSERT_KASSERT_HPP_FUNCTION_NAME __func__
+    #define @KASSERT_PREFIX@_KASSERT_HPP_FUNCTION_NAME __func__
 #endif
 
 // Represents the static location in the source code.
-#define KASSERT_KASSERT_HPP_SOURCE_LOCATION                   \
-    kassert::internal::SourceLocation {                       \
-        __FILE__, __LINE__, KASSERT_KASSERT_HPP_FUNCTION_NAME \
+#define @KASSERT_PREFIX@_KASSERT_HPP_SOURCE_LOCATION                   \
+   @KASSERT_NAMESPACE@::internal::SourceLocation {                       \
+        __FILE__, __LINE__, @KASSERT_PREFIX@_KASSERT_HPP_FUNCTION_NAME \
     }
 
 /// @endcond
