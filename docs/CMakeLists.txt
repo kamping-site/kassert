@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 # find Doxygen
 find_package(Doxygen)
 
@@ -48,11 +50,14 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_TAB_SIZE 2)
     set(DOXYGEN_ENABLED_SECTIONS KAMPING_MAIN_PAGE)
     set(DOXYGEN_FILE_PATTERNS *.cpp *.hpp *.dox *.md)
+    set(DOXYGEN_STRIP_FROM_PATH ${PROJECT_BINARY_DIR}/include/) # omit build directory from file list in Doxygen output
 
     doxygen_add_docs(
-        docs ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/../include/
+        ${KASSERT_CMAKE_NAMESPACE}_docs ${CMAKE_CURRENT_LIST_DIR}
+        ${PROJECT_BINARY_DIR}/include/${KASSERT_INCLUDE_SUBDIR}
         COMMENT "Generating Documentation"
         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
+	ALL
     )
     include(GNUInstallDirs)
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ TYPE DOC)
