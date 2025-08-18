@@ -24,12 +24,14 @@ include(GoogleTest)
 function (kassert_register_test KASSERT_TARGET_NAME)
     cmake_parse_arguments("KASSERT" "EXCEPTION_MODE" "" "FILES" ${ARGN})
     add_executable(${KASSERT_TARGET_NAME} ${KASSERT_FILES})
-    target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE GTest::gtest GTest::gtest_main GTest::gmock kassert)
-    target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE kassert_warnings)
+    target_link_libraries(
+        ${KASSERT_TARGET_NAME} PRIVATE GTest::gtest GTest::gtest_main GTest::gmock ${KASSERT_CMAKE_NAMESPACE}::kassert
+    )
+    target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE ${KASSERT_CMAKE_NAMESPACE}_kassert_warnings)
     gtest_discover_tests(${KASSERT_TARGET_NAME})
 
     if (KASSERT_EXCEPTION_MODE)
-        set_target_properties(${KASSERT_TARGET_NAME} PROPERTIES KASSERT_EXCEPTION_MODE ON)
+        set_target_properties(${KASSERT_TARGET_NAME} PROPERTIES ${KASSERT_PREFIX}_EXCEPTION_MODE ON)
     endif ()
 endfunction ()
 
@@ -50,7 +52,7 @@ function (kassert_register_compilation_failure_test)
 
     # the file should compile without any section enabled
     add_executable(${KATESTROPHE_TARGET} ${KATESTROPHE_FILES})
-    target_link_libraries(${KATESTROPHE_TARGET} PUBLIC gtest ${KATESTROPHE_LIBRARIES})
+    target_link_libraries(${KATESTROPHE_TARGET} PUBLIC GTest::gtest ${KATESTROPHE_LIBRARIES})
 
     # For each given section, add a target.
     foreach (SECTION ${KATESTROPHE_SECTIONS})
