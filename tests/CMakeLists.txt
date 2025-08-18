@@ -37,8 +37,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(InstallTest.cmake)
 add_install_test(NAME kassert_install SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
-test_subdirectory(NAME kassert_install_works
-  SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/install-test
-  INSTALL_NAMES kassert_install
-)  
-
+test_subdirectory(
+    NAME kassert_install_works SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/install-test INSTALL_NAMES kassert_install
+)
