@@ -29,7 +29,9 @@ if (NOT DEFINED KASSERT_INCLUDE_SUBDIR)
     set(KASSERT_INCLUDE_SUBDIR "${KASSERT_VENDOR_ID}")
 endif ()
 
-string(TOUPPER ${KASSERT_CXX_NAMESPACE} KASSERT_PREFIX)
+if(NOT DEFINED KASSERT_PREFIX)
+  string(TOUPPER ${KASSERT_CXX_NAMESPACE} KASSERT_PREFIX)
+endif()
 
 # include guard to prevent duplicate targets when including this project as a subdirectory
 if (TARGET ${KASSERT_CMAKE_NAMESPACE}::kassert)
