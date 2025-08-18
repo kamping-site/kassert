@@ -111,11 +111,11 @@ target_compile_definitions(
 # The assertion level controls which assertions are enabled during runtime. Assertion levels can be set explicitly using
 # the -DKASSERT_ASSERTION_LEVEL=... flag. You can also set the KASSERT_ASSERTION_LEVEL target property to the desired
 # level on the target which links to kassert. This will properly #define the assertion level for the target.
-set(assertion_level_set "$<BOOL:$<TARGET_PROPERTY:KASSERT_ASSERTION_LEVEL>>")
-set(assertion_level "$<TARGET_PROPERTY:KASSERT_ASSERTION_LEVEL>")
+set(assertion_level_set "$<BOOL:$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>>")
+set(assertion_level "$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>")
 target_compile_definitions(
     ${KASSERT_CMAKE_NAMESPACE}_kassert
-    INTERFACE "$<${assertion_level_set}:-DKASSERT_ASSERTION_LEVEL=${assertion_level}>"
+    INTERFACE "$<${assertion_level_set}:-D${KASSERT_PREFIX}_ASSERTION_LEVEL=${assertion_level}>"
 )
 
 add_library(${KASSERT_CMAKE_NAMESPACE}::kassert ALIAS ${KASSERT_CMAKE_NAMESPACE}_kassert)
