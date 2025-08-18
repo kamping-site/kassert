@@ -1,15 +1,19 @@
 {
   "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 15
+  },
   "configurePresets": [
     {
       "name": "ci",
       "generator": "Unix Makefiles",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
-          "CMAKE_COMPILE_WARNING_AS_ERROR": "ON",
-	  "KASSERT_BUILD_TESTS": "ON",
-	  "KASSERT_BUILD_DOCS": "OFF",
-	  "CMAKE_PROJECT_INCLUDE_BEFORE": "${sourceDir}/cmake/ci_warning_flags.cmake"
+        "CMAKE_COMPILE_WARNING_AS_ERROR": "ON",
+        "KASSERT_BUILD_TESTS": "ON",
+        "KASSERT_BUILD_DOCS": "OFF",
+        "CMAKE_PROJECT_INCLUDE_BEFORE": "${sourceDir}/cmake/ci_warning_flags.cmake"
       }
     }
   ],
