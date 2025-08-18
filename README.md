@@ -81,6 +81,29 @@ constexpr int heavy = KAMPING_ASSERTION_LEVEL_HEAVY;
 
 - C++17-ready compiler (GCC, Clang, ICX)
 
+## Vendoring Support
+
+KAssert can be embedded in other libraries with custom namespaces and macro names to prevent naming conflicts.
+
+**When to vendor:** Use vendoring when developing a library that uses KAssert internally to avoid conflicts with user code that might also use KAssert.
+
+### Configuration Variables
+
+- `KASSERT_VENDOR_ID` - Base identifier for deriving other variables
+- `KASSERT_CMAKE_NAMESPACE` - Prefix for all CMake targets
+- `KASSERT_CXX_NAMESPACE` - C++ namespace for the library
+- `KASSERT_INCLUDE_SUBDIR` - Subdirectory for header installation
+- `KASSERT_PREFIX` - The prefix for all macros
+
+### Example
+
+```cmake
+set(KASSERT_VENDOR_ID "myassert")
+add_subdirectory(vendor/kassert)
+```
+
+This generates macros like `MYASSERT()` instead of `KASSERT()`.
+
 ## LICENSE
 
 KAssert is released under the MIT License. See [LICENSE](LICENSE) for details.
