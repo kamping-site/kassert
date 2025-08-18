@@ -41,7 +41,7 @@ if (TARGET ${KASSERT_CMAKE_NAMESPACE}::kassert)
 endif ()
 
 option(KASSERT_BUILD_TESTS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
-option(KASSERT_BUILD_DOCS "Build the docs." ${PROJECT_IS_TOP_LEVEL})
+option(KASSERT_BUILD_DOCS "Build the docs." OFF)
 option(KASSERT_USE_BUNDLED_GTEST "Use bundled googletest (downloaded at configure time via FetchContent)." ON)
 option(KASSERT_INSTALL "Install the kassert library." ON)
 
