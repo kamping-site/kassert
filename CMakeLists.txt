@@ -14,9 +14,9 @@ if (CMAKE_VERSION VERSION_LESS 3.21)
 endif ()
 
 # This is the vendor ID, which is used to create the CMake namespace and the C++ namespace.
-if(NOT DEFINED KASSERT_VENDOR_ID)
-  set(KASSERT_VENDOR_ID "kassert")
-endif()
+if (NOT DEFINED KASSERT_VENDOR_ID)
+    set(KASSERT_VENDOR_ID "kassert")
+endif ()
 
 # Derive others if not already defined
 if (NOT DEFINED KASSERT_CMAKE_NAMESPACE)
@@ -31,9 +31,9 @@ if (NOT DEFINED KASSERT_INCLUDE_SUBDIR)
     set(KASSERT_INCLUDE_SUBDIR "${KASSERT_VENDOR_ID}")
 endif ()
 
-if(NOT DEFINED KASSERT_PREFIX)
-  string(TOUPPER ${KASSERT_CXX_NAMESPACE} KASSERT_PREFIX)
-endif()
+if (NOT DEFINED KASSERT_PREFIX)
+    string(TOUPPER ${KASSERT_CXX_NAMESPACE} KASSERT_PREFIX)
+endif ()
 
 # include guard to prevent duplicate targets when including this project as a subdirectory
 if (TARGET ${KASSERT_CMAKE_NAMESPACE}::kassert)
@@ -43,6 +43,7 @@ endif ()
 option(KASSERT_BUILD_TESTS "Build the tests." ${PROJECT_IS_TOP_LEVEL})
 option(KASSERT_BUILD_DOCS "Build the docs." ${PROJECT_IS_TOP_LEVEL})
 option(KASSERT_USE_BUNDLED_GTEST "Use bundled googletest (downloaded at configure time via FetchContent)." ON)
+option(KASSERT_INSTALL "Install the kassert library." ON)
 
 if (KASSERT_BUILD_DOCS)
     add_subdirectory(docs)
@@ -127,38 +128,42 @@ if (KASSERT_BUILD_TESTS)
     add_subdirectory(tests)
 endif ()
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}ConfigVersion.cmake
-    VERSION ${kassert_PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion ARCH_INDEPENDENT # requires CMake 3.14
-)
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}Config.cmake @ONLY
-)
-
-include(GNUInstallDirs)
-install(
-    TARGETS ${KASSERT_CMAKE_NAMESPACE}_kassert
-    EXPORT ${KASSERT_CMAKE_NAMESPACE}Targets
-    INCLUDES
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-foreach (file ${kassert_sources})
-    get_filename_component(rel_dir ${file} DIRECTORY)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/${KASSERT_INCLUDE_SUBDIR}/${file}
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${KASSERT_INCLUDE_SUBDIR}/${rel_dir}
+if (KASSERT_INSTALL)
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}ConfigVersion.cmake
+        VERSION ${kassert_PROJECT_VERSION}
+        COMPATIBILITY AnyNewerVersion ARCH_INDEPENDENT # requires CMake 3.14
     )
-endforeach ()
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}Config.cmake @ONLY
+    )
 
-install(
-    EXPORT ${KASSERT_CMAKE_NAMESPACE}Targets
-    FILE ${KASSERT_CMAKE_NAMESPACE}Targets.cmake
-    NAMESPACE ${KASSERT_TARGET_PREFIX}::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${KASSERT_INCLUDE_SUBDIR}
-)
+    include(GNUInstallDirs)
+    install(
+        TARGETS ${KASSERT_CMAKE_NAMESPACE}_kassert
+        EXPORT ${KASSERT_CMAKE_NAMESPACE}Targets
+        INCLUDES
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}ConfigVersion.cmake ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}Config.cmake
+    foreach (file ${kassert_sources})
+        get_filename_component(rel_dir ${file} DIRECTORY)
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/${KASSERT_INCLUDE_SUBDIR}/${file}
+                DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${KASSERT_INCLUDE_SUBDIR}/${rel_dir}
+        )
+    endforeach ()
+
+    install(
+        EXPORT ${KASSERT_CMAKE_NAMESPACE}Targets
+        FILE ${KASSERT_CMAKE_NAMESPACE}Targets.cmake
+        NAMESPACE ${KASSERT_TARGET_PREFIX}::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${KASSERT_INCLUDE_SUBDIR}
-)
+    )
+
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}ConfigVersion.cmake
+                  ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}Config.cmake
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${KASSERT_INCLUDE_SUBDIR}
+    )
+endif ()
