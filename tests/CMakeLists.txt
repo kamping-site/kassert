@@ -7,11 +7,11 @@ include(GoogleTest)
 kassert_register_test(test_kassert_assertion_mode FILES kassert_test.cpp)
 kassert_register_test(test_kassert_exception_mode EXCEPTION_MODE FILES kassert_test.cpp)
 
-###################
-# Vendoring tests #
-###################
-#  since we inherit variables from the parent scope, we need to unset the vendoring variables
-# here
+# ######################################################################################################################
+# Vendoring tests
+# ######################################################################################################################
+
+# since we inherit variables from the parent scope, we need to unset the vendoring variables here
 set(KASSERT_VENDOR_ID "mykassert")
 unset(KASSERT_CMAKE_NAMESPACE)
 unset(KASSERT_CXX_NAMESPACE)
@@ -29,4 +29,16 @@ target_link_libraries(test_vendoring PRIVATE mykassert::kassert kassert::kassert
 set_target_properties(test_vendoring PROPERTIES KASSERT_ASSERTION_LEVEL 30)
 set_target_properties(test_vendoring PROPERTIES MYKASSERT_ASSERTION_LEVEL 10)
 gtest_discover_tests(test_vendoring)
+
+FetchContent_Declare(
+    InstallTest.cmake
+    GIT_REPOSITORY https://github.com/niklas-uhl/InstallTest.cmake
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(InstallTest.cmake)
+add_install_test(NAME kassert_install SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+test_subdirectory(NAME kassert_install_works
+  SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/install-test
+  INSTALL_NAMES kassert_install
+)  
 
