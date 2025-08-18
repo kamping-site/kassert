@@ -14,7 +14,9 @@ if (CMAKE_VERSION VERSION_LESS 3.21)
 endif ()
 
 # This is the vendor ID, which is used to create the CMake namespace and the C++ namespace.
-set(KASSERT_VENDOR_ID "kassert")
+if(NOT DEFINED KASSERT_VENDOR_ID)
+  set(KASSERT_VENDOR_ID "kassert")
+endif()
 
 # Derive others if not already defined
 if (NOT DEFINED KASSERT_CMAKE_NAMESPACE)
