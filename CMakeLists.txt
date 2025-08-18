@@ -107,7 +107,7 @@ endif ()
 # or by setting the KASSERT_EXCEPTION_MODE target property to ON on the target which links to kassert.
 set(exception_mode_enabled "$<BOOL:$<TARGET_PROPERTY:KASSERT_EXCEPTION_MODE>>")
 target_compile_definitions(
-    ${KASSERT_CMAKE_NAMESPACE}_kassert INTERFACE "$<${exception_mode_enabled}:-DKASSERT_EXCEPTION_MODE>"
+    ${KASSERT_CMAKE_NAMESPACE}_kassert INTERFACE "$<${exception_mode_enabled}:-D${KASSERT_PREFIX}_EXCEPTION_MODE>"
 )
 
 # The assertion level controls which assertions are enabled during runtime. Assertion levels can be set explicitly using
