@@ -1,6 +1,6 @@
 // This file is part of KAssert.
 //
-// Copyright 2021-2022 The KAssert Authors
+// Copyright 2021-2025 The KAssert Authors
 
 /// @file
 /// @brief Provides macros to implement the KASSERT, THROWING_KASSERT and THROWING_KASSERT_SPECIFIED macros.
@@ -47,16 +47,16 @@
 // - The call to `std::abort()` is not wrapped in a function to keep the stack trace clean.
 #define @KASSERT_PREFIX@_KASSERT_HPP_KASSERT_IMPL(type, expression, message, level)                           \
     do {                                                                                             \
-        if constexpr (@KASSERT_NAMESPACE@::internal::assertion_enabled(level)) {                                 \
+        if constexpr (@KASSERT_CXX_NAMESPACE@::internal::assertion_enabled(level)) {                                 \
             @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_PUSH                                                      \
             @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_IGNORE_PARENTHESES                                        \
-            if (!@KASSERT_NAMESPACE@::internal::evaluate_and_print_assertion(                                    \
+            if (!@KASSERT_CXX_NAMESPACE@::internal::evaluate_and_print_assertion(                                    \
                     type,                                                                            \
-                    @KASSERT_NAMESPACE@::internal::finalize_expr(@KASSERT_NAMESPACE@::internal::Decomposer{} <= expression), \
+                    @KASSERT_CXX_NAMESPACE@::internal::finalize_expr(@KASSERT_CXX_NAMESPACE@::internal::Decomposer{} <= expression), \
                     @KASSERT_PREFIX@_KASSERT_HPP_SOURCE_LOCATION,                                             \
                     #expression                                                                      \
                 )) {                                                                                 \
-                @KASSERT_NAMESPACE@::Logger<std::ostream&>(std::cerr) << message << "\n";                        \
+                @KASSERT_CXX_NAMESPACE@::Logger<std::ostream&>(std::cerr) << message << "\n";                        \
                 std::abort();                                                                        \
             }                                                                                        \
             @KASSERT_PREFIX@_KASSERT_HPP_DIAGNOSTIC_POP                                                       \
@@ -75,7 +75,7 @@
 
 // KASSERT() chooses the right implementation depending on its number of arguments.
 #define @KASSERT_PREFIX@_3(expression, message, level) @KASSERT_PREFIX@_KASSERT_HPP_KASSERT_IMPL("ASSERTION", expression, message, level)
-#define @KASSERT_PREFIX@_2(expression, message)        @KASSERT_PREFIX@_3(expression, message, @KASSERT_NAMESPACE@::assert::normal)
+#define @KASSERT_PREFIX@_2(expression, message)        @KASSERT_PREFIX@_3(expression, message, @KASSERT_CXX_NAMESPACE@::assert::normal)
 #define @KASSERT_PREFIX@_1(expression)                 @KASSERT_PREFIX@_2(expression, "")
 
 // Implementation of the THROWING_KASSERT() macro.
@@ -91,9 +91,9 @@
 #else
     #define @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(expression, exception_type, message, ...) \
         do {                                                                                             \
-            if constexpr (@KASSERT_NAMESPACE@::internal::assertion_enabled(@KASSERT_NAMESPACE@::assert::kthrow)) {               \
+            if constexpr (@KASSERT_CXX_NAMESPACE@::internal::assertion_enabled(@KASSERT_CXX_NAMESPACE@::assert::kthrow)) {               \
                 if (!(expression)) {                                                                     \
-                    @KASSERT_NAMESPACE@::Logger<std::ostream&>(std::cerr)                                            \
+                    @KASSERT_CXX_NAMESPACE@::Logger<std::ostream&>(std::cerr)                                            \
                         << (exception_type(message, ##__VA_ARGS__).what()) << "\n";                      \
                     std::abort();                                                                        \
                 }                                                                                        \
@@ -104,11 +104,11 @@
 #define @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL(expression, message)                                   \
     @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                  \
         expression,                                                                                      \
-        @KASSERT_NAMESPACE@::KassertException,                                                                       \
-        @KASSERT_NAMESPACE@::internal::build_what(                                                                   \
+        @KASSERT_CXX_NAMESPACE@::KassertException,                                                                       \
+        @KASSERT_CXX_NAMESPACE@::internal::build_what(                                                                   \
             #expression,                                                                                 \
             @KASSERT_PREFIX@_KASSERT_HPP_SOURCE_LOCATION,                                                         \
-            (@KASSERT_NAMESPACE@::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
+            (@KASSERT_CXX_NAMESPACE@::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
         )                                                                                                \
     )
 
@@ -116,10 +116,10 @@
     @KASSERT_PREFIX@_KASSERT_HPP_THROWING_KASSERT_IMPL_INTERNAL(                                                  \
         expression,                                                                                      \
         exception_type,                                                                                  \
-        @KASSERT_NAMESPACE@::internal::build_what(                                                                   \
+        @KASSERT_CXX_NAMESPACE@::internal::build_what(                                                                   \
             #expression,                                                                                 \
             @KASSERT_PREFIX@_KASSERT_HPP_SOURCE_LOCATION,                                                         \
-            (@KASSERT_NAMESPACE@::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
+            (@KASSERT_CXX_NAMESPACE@::internal::RrefOStringstreamLogger{std::ostringstream{}} << message).stream().str() \
         ),                                                                                               \
         ##__VA_ARGS__                                                                                    \
     )
@@ -137,7 +137,7 @@
 
 // Represents the static location in the source code.
 #define @KASSERT_PREFIX@_KASSERT_HPP_SOURCE_LOCATION                   \
-   @KASSERT_NAMESPACE@::internal::SourceLocation {                       \
+   @KASSERT_CXX_NAMESPACE@::internal::SourceLocation {                 \
         __FILE__, __LINE__, @KASSERT_PREFIX@_KASSERT_HPP_FUNCTION_NAME \
     }
 
