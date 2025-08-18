@@ -51,6 +51,10 @@ endif ()
 
 add_library(${KASSERT_CMAKE_NAMESPACE}_kassert INTERFACE)
 set(kassert_sources kassert.hpp internal/logger.hpp internal/assertion_macros.hpp internal/expression_decomposition.hpp)
+set_target_properties( ${KASSERT_CMAKE_NAMESPACE}_kassert PROPERTIES
+  EXPORT_NAME kassert
+  OUTPUT_NAME kassert
+)
 
 # generate the header files from the .in files
 foreach (file ${kassert_sources})
@@ -158,7 +162,7 @@ if (KASSERT_INSTALL)
     install(
         EXPORT ${KASSERT_CMAKE_NAMESPACE}Targets
         FILE ${KASSERT_CMAKE_NAMESPACE}Targets.cmake
-        NAMESPACE ${KASSERT_TARGET_PREFIX}::
+        NAMESPACE ${KASSERT_CMAKE_NAMESPACE}::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${KASSERT_INCLUDE_SUBDIR}
     )
 
