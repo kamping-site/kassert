@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "ci",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+          "CMAKE_COMPILE_WARNING_AS_ERROR": "ON",
+	  "KASSERT_BUILD_TESTS": "ON"
+	  "KASSERT_BUILD_DOCS": "OFF"
+	  "CMAKE_PROJECT_INCLUDE_BEFORE": "${sourceDir}/cmake/ci_warning_flags.cmake"
+      }
+    }
+  ],
+  "buildPresets": [{ "name": "ci", "configurePreset": "ci" }],
+  "testPresets": [
+    {
+      "name": "ci",
+      "configurePreset": "ci",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

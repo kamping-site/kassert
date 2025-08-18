@@ -67,41 +67,6 @@ target_include_directories(
 # set C++ standard to C++17
 target_compile_features(${KASSERT_CMAKE_NAMESPACE}_kassert INTERFACE cxx_std_17)
 
-add_library(${KASSERT_CMAKE_NAMESPACE}_kassert_warnings INTERFACE)
-target_compile_options(
-    ${KASSERT_CMAKE_NAMESPACE}_kassert_warnings
-    INTERFACE "-Wall"
-              "-Wextra"
-              "-Wconversion"
-              "-Wnon-virtual-dtor"
-              "-Woverloaded-virtual"
-              "-Wshadow"
-              "-Wsign-conversion"
-              "-Wundef"
-              "-Wunreachable-code"
-              "-Wunused"
-)
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    target_compile_options(
-        ${KASSERT_CMAKE_NAMESPACE}_kassert_warnings INTERFACE "-Wcast-align" "-Wnull-dereference" "-Wpedantic"
-                                                              "-Wextra-semi" "-Wno-gnu-zero-variadic-macro-arguments"
-    )
-endif ()
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    target_compile_options(
-        ${KASSERT_CMAKE_NAMESPACE}_kassert_warnings
-        INTERFACE "-Wcast-align"
-                  "-Wnull-dereference"
-                  "-Wpedantic"
-                  "-Wnoexcept"
-                  "-Wsuggest-attribute=const"
-                  "-Wsuggest-attribute=noreturn"
-                  "-Wsuggest-override"
-    )
-endif ()
-
 # THROWING_KASSERT is able to throw an exception if an assertion fails. If KASSERT_EXCEPTION_MODE is defined, than an
 # exception will be thrown upon failure, otherwise it behaves like regular KASSERT. You can either manually #define it,
 # or by setting the KASSERT_EXCEPTION_MODE target property to ON on the target which links to kassert.
@@ -121,6 +86,11 @@ target_compile_definitions(
 )
 
 add_library(${KASSERT_CMAKE_NAMESPACE}::kassert ALIAS ${KASSERT_CMAKE_NAMESPACE}_kassert)
+
+add_library(${KASSERT_CMAKE_NAMESPACE}_cxx_flags INTERFACE)
+if (KASSERT_CXX_FLAGS)
+    target_compile_options(${KASSERT_CMAKE_NAMESPACE}_cxx_flags INTERFACE ${KASSERT_CXX_FLAGS})
+endif ()
 
 # Tests are only built if KASSERT_BUILD_TESTS is set (OFF by default, ON if this is the top-level project)
 if (KASSERT_BUILD_TESTS)
