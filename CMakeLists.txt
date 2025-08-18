@@ -3,7 +3,7 @@ project(
     kassert
     DESCRIPTION "Assertion library for KaMPIng"
     LANGUAGES CXX
-    VERSION 0.2.2
+    VERSION 1.0.0
 )
 if (CMAKE_VERSION VERSION_LESS 3.21)
     if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
