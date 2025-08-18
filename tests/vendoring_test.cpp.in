@@ -4,15 +4,15 @@
 
 #include <gtest/gtest.h>
 
-#include <kassert/kassert.hpp>
-#include <mykassert/kassert.hpp>
+#include <@KASSERT_INCLUDE_SUBDIR@/kassert.hpp>
+#include <@KASSERT_INCLUDE_SUBDIR@/mykassert/kassert.hpp>
 
 TEST(KassertTest, vendored_kassert_is_independent) {
     // we set the levels using the CMake properties for both kassert versions
     // Let's check that they are correctly set and independent
-    EXPECT_EQ(KASSERT_ASSERTION_LEVEL, 30);
-    EXPECT_TRUE(kassert::internal::assertion_enabled(10));
-    EXPECT_TRUE(kassert::internal::assertion_enabled(30));
+    EXPECT_EQ(@KASSERT_PREFIX@_ASSERTION_LEVEL, 30);
+    EXPECT_TRUE(@KASSERT_CXX_NAMESPACE@::internal::assertion_enabled(10));
+    EXPECT_TRUE(@KASSERT_CXX_NAMESPACE@::internal::assertion_enabled(30));
     
     EXPECT_EQ(MYKASSERT_ASSERTION_LEVEL, 10);
     EXPECT_TRUE(mykassert::internal::assertion_enabled(10));
