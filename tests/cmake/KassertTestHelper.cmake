@@ -24,7 +24,9 @@ include(GoogleTest)
 function (kassert_register_test KASSERT_TARGET_NAME)
     cmake_parse_arguments("KASSERT" "EXCEPTION_MODE" "" "FILES" ${ARGN})
     add_executable(${KASSERT_TARGET_NAME} ${KASSERT_FILES})
-    target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE GTest::gtest GTest::gtest_main GTest::gmock ${KASSERT_CMAKE_NAMESPACE}::kassert)
+    target_link_libraries(
+        ${KASSERT_TARGET_NAME} PRIVATE GTest::gtest GTest::gtest_main GTest::gmock ${KASSERT_CMAKE_NAMESPACE}::kassert
+    )
     target_link_libraries(${KASSERT_TARGET_NAME} PRIVATE ${KASSERT_CMAKE_NAMESPACE}_kassert_warnings)
     gtest_discover_tests(${KASSERT_TARGET_NAME})
 
