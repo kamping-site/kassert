@@ -51,6 +51,7 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_ENABLED_SECTIONS KAMPING_MAIN_PAGE)
     set(DOXYGEN_FILE_PATTERNS *.cpp *.hpp *.dox *.md)
     set(DOXYGEN_STRIP_FROM_PATH ${PROJECT_BINARY_DIR}/include/) # omit build directory from file list in Doxygen output
+    set(DOXYGEN_QUIET YES)
 
     doxygen_add_docs(
         ${KASSERT_CMAKE_NAMESPACE}_docs ${CMAKE_CURRENT_LIST_DIR}

@@ -19,6 +19,6 @@ jobs:
       - name: version
         run: doxygen --version
       - name: cmake
-        run: cmake -B build
+        run: cmake --preset ci -DKASSERT_BUILD_DOCS=ON
       - name: run-doxygen
-        run: cmake --build build/ --target docs          
+        run: cmake --build --preset ci --target kassert_docs
