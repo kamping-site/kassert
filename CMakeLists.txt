@@ -132,7 +132,7 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion ARCH_INDEPENDENT # requires CMake 3.14
 )
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${KASSERT_CMAKE_NAMESPACE}Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}Config.cmake COPYONLY
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${KASSERT_CMAKE_NAMESPACE}Config.cmake @ONLY
 )
 
 include(GNUInstallDirs)
