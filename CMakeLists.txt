@@ -70,7 +70,7 @@ target_compile_features(${KASSERT_CMAKE_NAMESPACE}_kassert INTERFACE cxx_std_17)
 # THROWING_KASSERT is able to throw an exception if an assertion fails. If KASSERT_EXCEPTION_MODE is defined, than an
 # exception will be thrown upon failure, otherwise it behaves like regular KASSERT. You can either manually #define it,
 # or by setting the KASSERT_EXCEPTION_MODE target property to ON on the target which links to kassert.
-set(exception_mode_enabled "$<BOOL:$<TARGET_PROPERTY:KASSERT_EXCEPTION_MODE>>")
+set(exception_mode_enabled "$<BOOL:$<TARGET_PROPERTY:$<GENEX_EVAL:${KASSERT_PREFIX}_EXCEPTION_MODE>>>")
 target_compile_definitions(
     ${KASSERT_CMAKE_NAMESPACE}_kassert INTERFACE "$<${exception_mode_enabled}:-D${KASSERT_PREFIX}_EXCEPTION_MODE>"
 )
@@ -78,8 +78,8 @@ target_compile_definitions(
 # The assertion level controls which assertions are enabled during runtime. Assertion levels can be set explicitly using
 # the -DKASSERT_ASSERTION_LEVEL=... flag. You can also set the KASSERT_ASSERTION_LEVEL target property to the desired
 # level on the target which links to kassert. This will properly #define the assertion level for the target.
-set(assertion_level_set "$<BOOL:$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>>")
-set(assertion_level "$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>")
+set(assertion_level_set "$<BOOL:$<GENEX_EVAL:$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>>>")
+set(assertion_level "$<GENEX_EVAL:$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>>")
 target_compile_definitions(
     ${KASSERT_CMAKE_NAMESPACE}_kassert
     INTERFACE "$<${assertion_level_set}:-D${KASSERT_PREFIX}_ASSERTION_LEVEL=${assertion_level}>"
