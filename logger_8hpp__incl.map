@@ -1,0 +1,13 @@
+<map id="kassert/internal/logger.hpp" name="kassert/internal/logger.hpp">
+<area shape="rect" id="Node000001" title="Logger utility class to build error messages for failed assertins." alt="" coords="154,5,349,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,81,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,33,91,77,89,72,217,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="106,79,181,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,33,174,73,171,69,233,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="205,79,297,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="254,31,254,65,249,65,249,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="321,79,381,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="269,29,325,68,322,73,266,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="405,79,468,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="282,28,395,71,393,76,280,33"/>
+</map>

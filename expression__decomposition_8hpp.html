@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.10.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Kassert - Karlsruhe Assertion Library" />
+<meta property="og:image" content="logo.svg" />
+<meta property="og:description" content="Powerful assertions made easy: Define assertion levels, get insights with expression decomposition, and switch between exceptions and assertions." />
+<meta property="og:url" content="https://kamping-site.github.io/kassert/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="logo.svg" />
+<meta name="twitter:title" content="Kassert - Karlsruhe Assertion Library" />
+<meta name="twitter:description" content="Powerful assertions made easy: Define assertion levels, get insights with expression decomposition, and switch between exceptions and assertions." />
+<!-- END twitter metadata -->
+<title>kassert: kassert/internal/expression_decomposition.hpp File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="icon.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://tholman.com/github-corners/ -->
+<a href="https://github.com/kamping-site/kassert" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="120" height="120" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="icon.svg"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">kassert
+   &#160;<span id="projectnumber">1.0.0</span>
+   </div>
+   <div id="projectbrief">Assertion library for KaMPIng</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.10.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('expression__decomposition_8hpp.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">expression_decomposition.hpp File Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Expression decomposition.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;type_traits&gt;</code><br />
+<code>#include &quot;<a class="el" href="logger_8hpp_source.html">./logger.hpp</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for expression_decomposition.hpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="expression__decomposition_8hpp__incl.png" border="0" usemap="#akassert_2internal_2expression__decomposition_8hpp" alt=""/></div>
+<map name="akassert_2internal_2expression__decomposition_8hpp" id="akassert_2internal_2expression__decomposition_8hpp">
+<area shape="rect" title="Expression decomposition." alt="" coords="55,5,253,45"/>
+<area shape="rect" title=" " alt="" coords="5,167,97,192"/>
+<area shape="poly" title=" " alt="" coords="143,47,69,157,65,154,139,44"/>
+<area shape="rect" href="logger_8hpp.html" title="Logger utility class to build error messages for failed assertins." alt="" coords="159,93,258,119"/>
+<area shape="poly" title=" " alt="" coords="169,44,195,80,191,84,165,47"/>
+<area shape="poly" title=" " alt="" coords="184,121,90,163,88,159,182,116"/>
+<area shape="rect" title=" " alt="" coords="121,167,197,192"/>
+<area shape="poly" title=" " alt="" coords="203,121,177,157,173,154,198,117"/>
+<area shape="rect" title=" " alt="" coords="222,167,297,192"/>
+<area shape="poly" title=" " alt="" coords="219,117,245,154,241,157,215,121"/>
+<area shape="rect" title=" " alt="" coords="321,167,381,192"/>
+<area shape="poly" title=" " alt="" coords="233,116,317,158,315,163,230,121"/>
+<area shape="rect" title=" " alt="" coords="405,167,468,192"/>
+<area shape="poly" title=" " alt="" coords="246,116,393,162,391,167,245,121"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="expression__decomposition_8hpp__dep__incl.png" border="0" usemap="#akassert_2internal_2expression__decomposition_8hppdep" alt=""/></div>
+<map name="akassert_2internal_2expression__decomposition_8hppdep" id="akassert_2internal_2expression__decomposition_8hppdep">
+<area shape="rect" title="Expression decomposition." alt="" coords="5,5,204,45"/>
+<area shape="rect" href="kassert_8hpp.html" title="Macros for asserting runtime checks." alt="" coords="31,93,179,119"/>
+<area shape="poly" title=" " alt="" coords="107,59,107,93,102,93,102,59"/>
+</map>
+</div>
+</div>
+<p><a href="expression__decomposition_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkassert_1_1internal_1_1AlwaysFalse.html">kassert::internal::AlwaysFalse&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait that is always false, to implement static_asserts that always fail, thus preventing a template function from being instanciated. Used to forbid calling the overloads of &amp;&amp; and ||.  <a href="structkassert_1_1internal_1_1AlwaysFalse.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkassert_1_1internal_1_1Expression.html">kassert::internal::Expression</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for decomposed unary and binary expressions.  <a href="classkassert_1_1internal_1_1Expression.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkassert_1_1internal_1_1BinaryExpression.html">kassert::internal::BinaryExpression&lt; LhsT, RhsT &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A decomposed binary expression.  <a href="classkassert_1_1internal_1_1BinaryExpression.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkassert_1_1internal_1_1UnaryExpression.html">kassert::internal::UnaryExpression&lt; LhsT &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decomposed unary expression.  <a href="classkassert_1_1internal_1_1UnaryExpression.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">kassert::internal::LhsExpression&lt; LhsT &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The left hand size of a decomposed expression. This can either be turned into a <code>BinaryExpr</code> if an operand or relation follows, or into a <code>UnaryExpr</code> otherwise.  <a href="classkassert_1_1internal_1_1LhsExpression.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkassert_1_1internal_1_1Decomposer.html">kassert::internal::Decomposer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decomposes an expression (see group description).  <a href="structkassert_1_1internal_1_1Decomposer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:affad2b3cb45dc70d4bb6e2182f2c899d" id="r_affad2b3cb45dc70d4bb6e2182f2c899d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affad2b3cb45dc70d4bb6e2182f2c899d">kassert::internal::finalize_expr</a> (<a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">bool</a> <a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">const</a> result)</td></tr>
+<tr class="memdesc:affad2b3cb45dc70d4bb6e2182f2c899d"><td class="mdescLeft">&#160;</td><td class="mdescRight">If an expression cannot be decomposed (due to &amp;&amp; or ||, to preserve short-circuit evaluation), simply return the result of the assertion.  <br /></td></tr>
+<tr class="separator:affad2b3cb45dc70d4bb6e2182f2c899d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69efe4f915636a6d2e68bf727abee91e" id="r_a69efe4f915636a6d2e68bf727abee91e"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">typename</a> <a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">ExprT</a> &gt; </td></tr>
+<tr class="memitem:a69efe4f915636a6d2e68bf727abee91e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">decltype</a>(<a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">auto</a>)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a69efe4f915636a6d2e68bf727abee91e">kassert::internal::finalize_expr</a> (<a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">ExprT</a> &amp;&amp;<a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">expr</a>)</td></tr>
+<tr class="memdesc:a69efe4f915636a6d2e68bf727abee91e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms <code><a class="el" href="classkassert_1_1internal_1_1LhsExpression.html" title="The left hand size of a decomposed expression. This can either be turned into a BinaryExpr if an oper...">LhsExpression</a></code> into <code><a class="el" href="classkassert_1_1internal_1_1UnaryExpression.html" title="Decomposed unary expression.">UnaryExpression</a></code>, does nothing to a <code><a class="el" href="classkassert_1_1internal_1_1Expression.html" title="Interface for decomposed unary and binary expressions.">Expression</a></code> (see group description).  <br /></td></tr>
+<tr class="separator:a69efe4f915636a6d2e68bf727abee91e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Expression decomposition. </p>
+<p>Failed assertions try to expand the expression similar to what Catch2 does. This is achieved by the following process:</p>
+<p>In a call </p><div class="fragment"><div class="line"><a class="code hl_define" href="group__assertion.html#ga9f406bf0ddcf96b2681219b5c2d45343">KASSERT</a>(rhs == lhs)</div>
+<div class="ttc" id="agroup__assertion_html_ga9f406bf0ddcf96b2681219b5c2d45343"><div class="ttname"><a href="group__assertion.html#ga9f406bf0ddcf96b2681219b5c2d45343">KASSERT</a></div><div class="ttdeci">#define KASSERT(...)</div><div class="ttdoc">Assertion macro. Accepts between one and three parameters.</div><div class="ttdef"><b>Definition</b> kassert.hpp:60</div></div>
+</div><!-- fragment --><p> <a class="el" href="group__assertion.html#ga9f406bf0ddcf96b2681219b5c2d45343" title="Assertion macro. Accepts between one and three parameters.">KASSERT()</a> also prints the values of <code>rhs</code> and <code>lhs</code>. However, this expression expansion is limited and only works for expressions that do not contain parentheses, but are implicitly left-associative. This is due to its implementation: </p><div class="fragment"><div class="line"><a class="code hl_define" href="group__assertion.html#ga9f406bf0ddcf96b2681219b5c2d45343">KASSERT</a>(rhs == lhs)</div>
+</div><!-- fragment --><p> is replaced by </p><div class="fragment"><div class="line">Decomposer{} &lt;= rhs == lhs</div>
+</div><!-- fragment --><p> which is interpreted by the compiler as </p><div class="fragment"><div class="line">((Decomposer{} &lt;= rhs) == lhs)</div>
+</div><!-- fragment --><p> where the first &lt;= relation is overloaded to return a proxy object which in turn overloads other operators. If the expression is not implicitly left-associative or contains parentheses, this does not work: </p><div class="fragment"><div class="line"><a class="code hl_define" href="group__assertion.html#ga9f406bf0ddcf96b2681219b5c2d45343">KASSERT</a>(rhs1 == lhs1 &amp;&amp; rhs2 == lhs2)</div>
+</div><!-- fragment --><p> is replaced by (with implicit parentheses) </p><div class="fragment"><div class="line">((Decomposer{} &lt;= rhs1) == lhs1) &amp;&amp; (rhs2 == lhs2))</div>
+</div><!-- fragment --><p> Thus, the left hand side of <code>&amp;&amp;</code> can only be expanded to the <em>result</em> of <code>rhs2 == lhs2</code>. This limitation only affects the error message, not the interpretation of the expression itself. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="affad2b3cb45dc70d4bb6e2182f2c899d" name="affad2b3cb45dc70d4bb6e2182f2c899d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affad2b3cb45dc70d4bb6e2182f2c899d">&#9670;&#160;</a></span>finalize_expr() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool kassert::internal::finalize_expr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">bool</a> <a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">const</a></td>          <td class="paramname"><span class="paramname"><em>result</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If an expression cannot be decomposed (due to &amp;&amp; or ||, to preserve short-circuit evaluation), simply return the result of the assertion. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">result</td><td>Result of the assertion. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Result of the assertion. </dd></dl>
+
+</div>
+</div>
+<a id="a69efe4f915636a6d2e68bf727abee91e" name="a69efe4f915636a6d2e68bf727abee91e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69efe4f915636a6d2e68bf727abee91e">&#9670;&#160;</a></span>finalize_expr() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ExprT &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">decltype(auto) kassert::internal::finalize_expr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classkassert_1_1internal_1_1LhsExpression.html">ExprT</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>expr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transforms <code>LhsExpression</code> into <code>UnaryExpression</code>, does nothing to a <code>Expression</code> (see group description). </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ExprT</td><td>Type of the expression, either <code>LhsExpression</code> or a <code>BinaryExpression</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expr</td><td>The expression. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The expression as some subclass of <code>Expression</code>. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- HTML footer for doxygen 1.9.2-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_ad4dc7ede77fe375943f221890c2402c.html">kassert</a></li><li class="navelem"><a class="el" href="dir_2f2d2b1d8fd5b429770bf666e64b9556.html">internal</a></li><li class="navelem"><a class="el" href="expression__decomposition_8hpp.html">expression_decomposition.hpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.10.0 </li>
+  </ul>
+</div>
+<script type="text/javascript">
+  $(function() {
+     toggleButton = document.createElement('doxygen-awesome-dark-mode-toggle')
+     toggleButton.title = "Toggle Light/Dark Mode"
+     $(document).ready(function(){
+       document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
+     })
+     $(window).resize(function(){
+       document.getElementById("MSearchBox").parentNode.appendChild(toggleButton)
+     })
+   })
+</script>
+</body>
+</html>
