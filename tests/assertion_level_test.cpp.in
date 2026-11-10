@@ -1,0 +1,13 @@
+// This file is part of KAssert.
+//
+// Copyright 2025 The KAssert Authors
+
+#include <gtest/gtest.h>
+
+#include <@KASSERT_INCLUDE_SUBDIR@/kassert.hpp>
+#include <@KASSERT_INCLUDE_SUBDIR@/mykassert/kassert.hpp>
+
+TEST(KassertTest, assertion_level_matches_property_or_default) {
+    EXPECT_EQ(@KASSERT_PREFIX@_ASSERTION_LEVEL, EXPECTED_KASSERT_LEVEL);
+    EXPECT_EQ(MYKASSERT_ASSERTION_LEVEL, EXPECTED_MYKASSERT_LEVEL);
+}
