@@ -53,15 +53,18 @@ argument, followed by the remaining arguments `[, ...]` passed to `THROWING_KASS
 ### Assertion Levels
 
 Assertions are enabled if their assertion level (optional third parameter of `KASSERT`) is **less than or equal to** the active assertion level.
-The default level is `kassert::assert::normal` (30).
-Set the CMake target property `KASSERT_ASSERTION_LEVEL` on you target linking against `kassert` to the numeric value of the desired assertion level.
-If omitted, the assertion level is set to `0`, which disables all assertions.
+Level `0` disables all assertions.
+Set the CMake target property `KASSERT_ASSERTION_LEVEL` on your target linking against `kassert` to the numeric value of the desired assertion level:
 
 ```cmake
 add_library(my_code ...)
 target_link_libraries(my_code PRIVATE kassert::kassert)
 set_target_properties(my_code PROPERTIES KASSERT_ASSERTION_LEVEL 10)
 ```
+
+To set the level for all targets at once, set `KASSERT_DEFAULT_ASSERTION_LEVEL` before adding KAssert, e.g. `set(KASSERT_DEFAULT_ASSERTION_LEVEL $<IF:$<CONFIG:Debug>,30,10>)`.
+The property and the default are numbers and may contain generator expressions; the property takes precedence.
+If neither is set, the level defaults to `kassert::assert::normal` (30) and the compiler emits a warning.
 
 ### Custom Assertion Levels
 
@@ -84,8 +87,10 @@ constexpr int heavy = KAMPING_ASSERTION_LEVEL_HEAVY;
 ## Vendoring Support
 
 KAssert can be embedded in other libraries with custom namespaces and macro names to prevent naming conflicts.
+Each embedded copy is an independent *instance* with its own macros, header, CMake target and assertion level.
 
 **When to vendor:** Use vendoring when developing a library that uses KAssert internally to avoid conflicts with user code that might also use KAssert.
+Use one instance per library that is released and consumed on its own; components that are always released together can share one.
 
 ### Configuration Variables
 
@@ -93,16 +98,39 @@ KAssert can be embedded in other libraries with custom namespaces and macro name
 - `KASSERT_CMAKE_NAMESPACE` - Prefix for all CMake targets
 - `KASSERT_CXX_NAMESPACE` - C++ namespace for the library
 - `KASSERT_INCLUDE_SUBDIR` - Subdirectory for header installation
-- `KASSERT_PREFIX` - The prefix for all macros
+- `KASSERT_PREFIX` - The prefix for all macros and the assertion level property
+- `KASSERT_DEFAULT_ASSERTION_LEVEL` - Assertion level for all targets linking to this instance which do not set the
+  `<KASSERT_PREFIX>_ASSERTION_LEVEL` property; may contain generator expressions
 
-### Example
+### For Library Authors
 
 ```cmake
-set(KASSERT_VENDOR_ID "myassert")
-add_subdirectory(vendor/kassert)
+include(FetchContent)
+FetchContent_Declare(mylib_kassert GIT_REPOSITORY https://github.com/kamping-site/kassert GIT_TAG v1.1.0)
+block() # keep the KASSERT_* variables from leaking into other instances
+    set(KASSERT_VENDOR_ID mylib)
+    set(KASSERT_DEFAULT_ASSERTION_LEVEL $<IF:$<CONFIG:Debug>,30,10>)
+    FetchContent_MakeAvailable(mylib_kassert)
+endblock()
+
+target_link_libraries(mylib INTERFACE mylib::kassert)
 ```
 
-This generates macros like `MYASSERT()` instead of `KASSERT()`.
+This creates the target `mylib::kassert` and the header `<mylib/kassert.hpp>`, which provides `MYLIB()`, `THROWING_MYLIB()` etc. instead of `KASSERT()`, in the namespace `mylib`.
+
+- Set the default level of your users with `KASSERT_DEFAULT_ASSERTION_LEVEL`, not by adding `MYLIB_ASSERTION_LEVEL` to the compile definitions of your own targets.
+  The default is attached to the KAssert target itself, so every target linking to the instance gets exactly one definition, no matter through how many of your targets it does so.
+  Definitions on your own targets may be missing for users of only some of your targets and conflict for users of several.
+- To make the level configurable, define a cache variable (e.g. `MYLIB_ASSERTION_LEVEL`) and pass its value as `KASSERT_DEFAULT_ASSERTION_LEVEL`.
+- The first project that adds an instance defines it; later attempts to add an instance with the same CMake namespace are ignored, including their default level.
+  So exactly one library should add each instance.
+- If KAssert is installed with your library (`KASSERT_INSTALL`), the default level is part of the exported target.
+
+### For Users of a Library Vendoring KAssert
+
+Nothing needs to be done: targets linking to the library get the level its authors chose as default, without a warning.
+To change it for a single target, set the `<KASSERT_PREFIX>_ASSERTION_LEVEL` property, e.g. `set_target_properties(my_app PROPERTIES MYLIB_ASSERTION_LEVEL 0)`.
+To change it for all targets, use the configuration option of the library, if it provides one.
 
 ## LICENSE
 

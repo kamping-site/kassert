@@ -75,14 +75,23 @@ target_compile_definitions(
     ${KASSERT_CMAKE_NAMESPACE}_kassert INTERFACE "$<${exception_mode_enabled}:-D${KASSERT_PREFIX}_EXCEPTION_MODE>"
 )
 
-# The assertion level controls which assertions are enabled during runtime. Assertion levels can be set explicitly using
-# the -DKASSERT_ASSERTION_LEVEL=... flag. You can also set the KASSERT_ASSERTION_LEVEL target property to the desired
-# level on the target which links to kassert. This will properly #define the assertion level for the target.
-set(assertion_level_set "$<BOOL:$<GENEX_EVAL:$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>>>")
-set(assertion_level "$<GENEX_EVAL:$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>>")
+# The assertion level controls which assertions are enabled during runtime. Set the KASSERT_ASSERTION_LEVEL target
+# property to the desired level on the target which links to kassert; this #defines the assertion level for that target.
+# A library vendoring kassert can set KASSERT_DEFAULT_ASSERTION_LEVEL before adding kassert; this level is used for all
+# targets linking to this kassert instance which do not set the property. Both may contain generator expressions. As the
+# level is attached to the kassert target itself, there is exactly one definition per target, no matter through how many
+# libraries the target links to this kassert instance.
+if (NOT DEFINED KASSERT_DEFAULT_ASSERTION_LEVEL)
+    set(KASSERT_DEFAULT_ASSERTION_LEVEL "")
+endif ()
+set(assertion_level_property "$<GENEX_EVAL:$<TARGET_PROPERTY:${KASSERT_PREFIX}_ASSERTION_LEVEL>>")
+# Test for emptiness instead of $<BOOL:...>, which would treat level 0 (all assertions disabled) as unset.
+set(assertion_level
+    "$<IF:$<STREQUAL:${assertion_level_property},>,${KASSERT_DEFAULT_ASSERTION_LEVEL},${assertion_level_property}>"
+)
 target_compile_definitions(
     ${KASSERT_CMAKE_NAMESPACE}_kassert
-    INTERFACE "$<${assertion_level_set}:-D${KASSERT_PREFIX}_ASSERTION_LEVEL=${assertion_level}>"
+    INTERFACE "$<$<NOT:$<STREQUAL:${assertion_level},>>:${KASSERT_PREFIX}_ASSERTION_LEVEL=${assertion_level}>"
 )
 
 add_library(${KASSERT_CMAKE_NAMESPACE}::kassert ALIAS ${KASSERT_CMAKE_NAMESPACE}_kassert)
